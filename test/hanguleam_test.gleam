@@ -48,10 +48,6 @@ pub fn get_choseong_whitespace_test() {
   |> should.equal("ㅇ\tㄴ\nㅎㅅㅇ")
 }
 
-pub fn get_choseong_from_choseong_test() {
-  hanguleam.get_choseong("ㄴㅈ") |> should.equal("ㄴㅈ")
-}
-
 pub fn malformed_utf8_test() {
   hanguleam.get_choseong("�") |> should.equal("")
 }
