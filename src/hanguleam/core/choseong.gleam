@@ -42,10 +42,7 @@ fn extract_from_complete_hangul(char: String) {
 }
 
 fn get_choseong_by_index(index: Int) -> Option(String) {
-  case index >= 0 && index < list.length(choseongs) {
-    True -> choseongs |> list.drop(index) |> list.first |> option.from_result
-    False -> None
-  }
+  utils.get_value_by_index(index, choseongs)
 }
 
 fn get_choseong_codepoint(codepoint: Int) -> Int {
