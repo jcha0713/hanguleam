@@ -3,7 +3,7 @@ import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/string
 import hanguleam/internal/constants.{
-  complete_hangul_start, jongseongs, number_of_jongseong,
+  complete_hangul_start, get_jongseong_info, jongseongs, number_of_jongseong,
 }
 import hanguleam/internal/utils
 
@@ -45,27 +45,23 @@ fn check_batchim(batchim_index: Int, filter: Option(BatchimFilter)) {
   }
 }
 
-fn get_batchim_length(batchim_index: Int) -> Option(Int) {
-  let mapping = constants.get_disassembled_consonants()
-  utils.get_value_by_index(batchim_index, jongseongs)
-  |> option.then(fn(char) {
-    case dict.get(mapping, char) {
-      Ok(disassembed) -> Some(string.length(disassembed))
-      Error(_) -> None
-    }
-  })
+fn get_batchim_length(batchim_index: Int) -> Int {
+  case utils.get_value_by_index(batchim_index, jongseongs) {
+    Some(char) ->
+      case dict.get(get_jongseong_info(), char) {
+        Ok(info) -> list.length(info.components)
+        Error(_) -> 0
+      }
+    None -> 0
+  }
 }
 
 fn is_single_batchim(batchim_index: Int) {
-  get_batchim_length(batchim_index)
-  |> option.map(fn(length) { length == 1 })
-  |> option.unwrap(False)
+  get_batchim_length(batchim_index) == 1
 }
 
 fn is_double_batchim(batchim_index: Int) {
-  get_batchim_length(batchim_index)
-  |> option.map(fn(length) { length == 2 })
-  |> option.unwrap(False)
+  get_batchim_length(batchim_index) == 2
 }
 
 fn get_batchim_index_if_complete_hangul(codepoint_int: Int) {
