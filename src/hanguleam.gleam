@@ -22,6 +22,24 @@ pub const get_choseong = choseong.get_choseong
 
 /// Checks if the last character of a Korean string has a batchim (final consonant).
 /// Returns `False` for empty strings, non-Korean characters, or incomplete Hangul.
+///
+/// ## Examples
+///
+/// ```gleam
+/// has_batchim("값")
+/// // -> True
+/// 
+/// has_batchim("토")
+/// // -> False
+/// 
+/// has_batchim("hello")
+/// // -> False
+/// ```
+///
+pub const has_batchim = batchim.has_batchim
+
+/// Checks if the last character of a Korean string has a batchim (final consonant) with filtering options.
+/// Returns `False` for empty strings, non-Korean characters, or incomplete Hangul.
 /// 
 /// ## Options
 /// 
@@ -35,26 +53,20 @@ pub const get_choseong = choseong.get_choseong
 /// import hanguleam/core/batchim.{HasBatchimOptions, SingleOnly, DoubleOnly}
 /// import gleam/option.{None, Some}
 /// 
-/// has_batchim("값", None)
+/// has_batchim_with_options("값", None)
 /// // -> True
 /// 
-/// has_batchim("토", None)
-/// // -> False
-/// 
-/// has_batchim("갑", Some(HasBatchimOptions(only: Some(SingleOnly))))
+/// has_batchim_with_options("갑", Some(HasBatchimOptions(only: Some(SingleOnly))))
 /// // -> True
 /// 
-/// has_batchim("값", Some(HasBatchimOptions(only: Some(SingleOnly))))
+/// has_batchim_with_options("값", Some(HasBatchimOptions(only: Some(SingleOnly))))
 /// // -> False (값 has double batchim ㅂ+ㅅ)
 /// 
-/// has_batchim("값", Some(HasBatchimOptions(only: Some(DoubleOnly))))
+/// has_batchim_with_options("값", Some(HasBatchimOptions(only: Some(DoubleOnly))))
 /// // -> True
-/// 
-/// has_batchim("hello", None)
-/// // -> False
 /// ```
 ///
-pub const has_batchim = batchim.has_batchim
+pub const has_batchim_with_options = batchim.has_batchim_with_options
 
 /// Extracts detailed batchim information from the last character of a Korean string.
 /// Returns comprehensive information about the batchim including its type and components.

@@ -59,7 +59,11 @@ pub fn get_batchim(text: String) -> Result(BatchimInfo, BatchimError) {
   }
 }
 
-pub fn has_batchim(
+pub fn has_batchim(text: String) -> Bool {
+  has_batchim_with_options(text, None)
+}
+
+pub fn has_batchim_with_options(
   text: String,
   options options: Option(HasBatchimOptions),
 ) -> Bool {
