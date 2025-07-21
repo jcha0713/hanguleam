@@ -1,6 +1,7 @@
 import gleam/dict
 import gleam/list
 import gleam/option.{type Option, None, Some}
+import gleam/result
 import gleam/string
 import hanguleam/internal/constants.{
   complete_hangul_start, get_batchim_data, jongseongs, number_of_jongseong,
@@ -13,8 +14,49 @@ pub type BatchimType {
   Double
 }
 
+pub type BatchimOnlyFilter {
+  SingleOnly
+  DoubleOnly
+}
+
+pub type BatchimInfo {
+  BatchimInfo(
+    character: String,
+    batchim_type: BatchimType,
+    components: List(String),
+  )
+}
+
+pub type BatchimError {
+  EmptyString
+  InvalidCharacter(String)
+}
+
 pub type HasBatchimOptions {
-  HasBatchimOptions(only: Option(BatchimType))
+  HasBatchimOptions(only: Option(BatchimOnlyFilter))
+}
+
+pub fn get_batchim(text: String) -> Result(BatchimInfo, BatchimError) {
+  use char <- result.try(
+    get_last_character(text) |> option.to_result(EmptyString),
+  )
+
+  let codepoint_int = utils.get_codepoint_value_from_char(char)
+
+  case utils.is_complete_hangul(codepoint_int) {
+    False -> Error(InvalidCharacter(char))
+    True -> {
+      let batchim_index = get_batchim_index(codepoint_int)
+      let batchim_type = get_batchim_type(batchim_index)
+      let components = get_batchim_components(batchim_index)
+
+      Ok(BatchimInfo(
+        character: char,
+        batchim_type: batchim_type,
+        components: components,
+      ))
+    }
+  }
 }
 
 pub fn has_batchim(
@@ -26,11 +68,10 @@ pub fn has_batchim(
     Some(HasBatchimOptions(only: filter)) -> filter
   }
 
-  get_last_character(text)
-  |> option.then(utils.get_codepoint_value_from_char)
-  |> option.then(get_batchim_index_if_complete_hangul)
-  |> option.map(fn(batchim_index) { filter_batchim(batchim_index, filter) })
-  |> option.unwrap(False)
+  case get_batchim(text) {
+    Ok(info) -> filter_batchim(info.batchim_type, filter)
+    Error(_) -> False
+  }
 }
 
 fn get_batchim_type(batchim_index: Int) -> BatchimType {
@@ -45,43 +86,30 @@ fn get_batchim_type(batchim_index: Int) -> BatchimType {
   }
 }
 
-fn filter_batchim(batchim_index: Int, filter: Option(BatchimType)) -> Bool {
+fn filter_batchim(
+  batchim_type: BatchimType,
+  filter: Option(BatchimOnlyFilter),
+) -> Bool {
   case filter {
-    None -> has_any_batchim(batchim_index)
-    Some(Single) -> is_single_batchim(batchim_index)
-    Some(Double) -> is_double_batchim(batchim_index)
-    Some(NoBatchim) -> !has_any_batchim(batchim_index)
+    None -> batchim_type != NoBatchim
+    Some(SingleOnly) -> batchim_type == Single
+    Some(DoubleOnly) -> batchim_type == Double
   }
 }
 
-fn is_single_batchim(batchim_index: Int) -> Bool {
-  get_batchim_type(batchim_index) == Single
-}
-
-fn is_double_batchim(batchim_index: Int) -> Bool {
-  get_batchim_type(batchim_index) == Double
-}
-
-fn has_any_batchim(batchim_index: Int) -> Bool {
-  get_batchim_type(batchim_index) != NoBatchim
-}
-
-fn get_batchim_length(batchim_index: Int) -> Int {
+fn get_batchim_components(batchim_index: Int) -> List(String) {
   case utils.get_value_by_index(batchim_index, jongseongs) {
     Some(char) ->
       case dict.get(get_batchim_data(), char) {
-        Ok(info) -> list.length(info.components)
-        Error(_) -> 0
+        Ok(info) -> info.components
+        Error(_) -> []
       }
-    None -> 0
+    None -> []
   }
 }
 
-fn get_batchim_index_if_complete_hangul(codepoint_int: Int) {
-  case utils.is_complete_hangul(codepoint_int) {
-    True -> Some(get_batchim_index(codepoint_int))
-    False -> None
-  }
+fn get_batchim_length(batchim_index: Int) -> Int {
+  get_batchim_components(batchim_index) |> list.length
 }
 
 fn get_last_character(text: String) -> Option(String) {
