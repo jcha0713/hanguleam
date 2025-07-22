@@ -4,7 +4,7 @@ import gleam/option.{type Option, None, Some}
 import gleam/result
 import gleam/string
 import hanguleam/internal/constants.{
-  complete_hangul_start, get_batchim_data, jongseongs, number_of_jongseong,
+  complete_hangul_start, get_jongseong_data, jongseongs, number_of_jongseong,
 }
 import hanguleam/internal/utils
 
@@ -104,7 +104,7 @@ fn filter_batchim(
 fn get_batchim_components(batchim_index: Int) -> List(String) {
   case utils.get_value_by_index(batchim_index, jongseongs) {
     Some(char) ->
-      case dict.get(get_batchim_data(), char) {
+      case dict.get(get_jongseong_data(), char) {
         Ok(info) -> info.components
         Error(_) -> []
       }
