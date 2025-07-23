@@ -6,6 +6,12 @@ pub const complete_hangul_start = 0xAC00
 // 힣
 pub const complete_hangul_end = 0xD7A3
 
+// ㄱ (Hangul compatibility jamo start)
+pub const hangul_jamo_start = 0x3131
+
+// ㅣ (Hangul compatibility jamo end)
+pub const hangul_jamo_end = 0x3163
+
 pub const number_of_jongseong = 28
 
 pub const number_of_jungseong = 21
@@ -13,6 +19,11 @@ pub const number_of_jungseong = 21
 pub const choseongs = [
   "ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ", "ㅋ",
   "ㅌ", "ㅍ", "ㅎ",
+]
+
+pub const jungseongs = [
+  "ㅏ", "ㅐ", "ㅑ", "ㅒ", "ㅓ", "ㅔ", "ㅕ", "ㅖ", "ㅗ", "ㅘ", "ㅙ", "ㅚ", "ㅛ", "ㅜ", "ㅝ", "ㅞ",
+  "ㅟ", "ㅠ", "ㅡ", "ㅢ", "ㅣ",
 ]
 
 pub const jongseongs = [
