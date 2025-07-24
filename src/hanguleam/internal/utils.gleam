@@ -3,6 +3,7 @@ import gleam/option.{type Option, None}
 import gleam/string
 import hanguleam/internal/constants.{
   complete_hangul_end, complete_hangul_start, hangul_jamo_end, hangul_jamo_start,
+  jungseong_end, jungseong_start,
 }
 
 pub fn is_complete_hangul(codepoint: Int) -> Bool {
@@ -11,6 +12,10 @@ pub fn is_complete_hangul(codepoint: Int) -> Bool {
 
 pub fn is_hangul_alphabet(codepoint: Int) -> Bool {
   hangul_jamo_start <= codepoint && codepoint <= hangul_jamo_end
+}
+
+pub fn is_jungseong_range(codepoint: Int) -> Bool {
+  codepoint >= jungseong_start && codepoint <= jungseong_end
 }
 
 pub fn is_hangul(codepoint: Int) -> Bool {

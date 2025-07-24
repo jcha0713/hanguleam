@@ -12,6 +12,12 @@ pub const hangul_jamo_start = 0x3131
 // ㅣ (Hangul compatibility jamo end)
 pub const hangul_jamo_end = 0x3163
 
+// ㅏ (Jungseong compatibility jamo start)
+pub const jungseong_start = 0x314F
+
+// ㅣ (Jungseong compatibility jamo end)
+pub const jungseong_end = 0x3163
+
 pub const number_of_jongseong = 28
 
 pub const number_of_jungseong = 21
@@ -30,6 +36,38 @@ pub const jongseongs = [
   "", "ㄱ", "ㄲ", "ㄳ", "ㄴ", "ㄵ", "ㄶ", "ㄷ", "ㄹ", "ㄺ", "ㄻ", "ㄼ", "ㄽ", "ㄾ", "ㄿ", "ㅀ",
   "ㅁ", "ㅂ", "ㅄ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ",
 ]
+
+pub type JungseongData {
+  JungseongData(components: List(String))
+}
+
+pub fn get_jungseong_data() {
+  dict.from_list([
+    // Simple vowels (single component)
+    #("ㅏ", JungseongData(["ㅏ"])),
+    #("ㅐ", JungseongData(["ㅐ"])),
+    #("ㅑ", JungseongData(["ㅑ"])),
+    #("ㅒ", JungseongData(["ㅒ"])),
+    #("ㅓ", JungseongData(["ㅓ"])),
+    #("ㅔ", JungseongData(["ㅔ"])),
+    #("ㅕ", JungseongData(["ㅕ"])),
+    #("ㅖ", JungseongData(["ㅖ"])),
+    #("ㅗ", JungseongData(["ㅗ"])),
+    #("ㅛ", JungseongData(["ㅛ"])),
+    #("ㅜ", JungseongData(["ㅜ"])),
+    #("ㅠ", JungseongData(["ㅠ"])),
+    #("ㅡ", JungseongData(["ㅡ"])),
+    #("ㅣ", JungseongData(["ㅣ"])),
+    // Compound vowels (multiple components)
+    #("ㅘ", JungseongData(["ㅗ", "ㅏ"])),
+    #("ㅙ", JungseongData(["ㅗ", "ㅐ"])),
+    #("ㅚ", JungseongData(["ㅗ", "ㅣ"])),
+    #("ㅝ", JungseongData(["ㅜ", "ㅓ"])),
+    #("ㅞ", JungseongData(["ㅜ", "ㅔ"])),
+    #("ㅟ", JungseongData(["ㅜ", "ㅣ"])),
+    #("ㅢ", JungseongData(["ㅡ", "ㅣ"])),
+  ])
+}
 
 pub type JongseongData {
   JongseongData(components: List(String))
