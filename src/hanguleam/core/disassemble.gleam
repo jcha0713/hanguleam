@@ -18,6 +18,52 @@ pub type DisassembleError {
   EmptyInput
 }
 
+pub fn disassemble_to_groups(text: String) {
+  text |> string.to_graphemes |> list.map(disassemble_char_to_groups)
+}
+
+fn disassemble_char_to_groups(char: String) {
+  let codepoint = utils.get_codepoint_value_from_char(char)
+
+  case utils.is_complete_hangul(codepoint) {
+    True -> {
+      case disassemble_complete_character(char) {
+        Ok(HangulSyllable(Choseong(cho), Jungseong(jung), Jongseong(jong))) -> {
+          let base_components = [cho] |> list.append(disassemble_jamo(jung))
+          case jong {
+            "" -> base_components
+            _ -> list.append(base_components, string.to_graphemes(jong))
+          }
+        }
+        Error(_) -> [char]
+      }
+    }
+    False -> {
+      case utils.is_hangul(codepoint) {
+        True -> disassemble_jamo(char)
+        False -> [char]
+      }
+    }
+  }
+}
+
+fn disassemble_jamo(char: String) {
+  case char |> utils.get_codepoint_value_from_char |> utils.is_jungseong_range {
+    True -> {
+      case dict.get(constants.get_jungseong_data(), char) {
+        Ok(data) -> data.components
+        Error(_) -> []
+      }
+    }
+    False -> {
+      case dict.get(constants.get_jongseong_data(), char) {
+        Ok(data) -> data.components
+        Error(_) -> []
+      }
+    }
+  }
+}
+
 pub fn disassemble_complete_character(
   char: String,
 ) -> Result(HangulSyllable, DisassembleError) {
