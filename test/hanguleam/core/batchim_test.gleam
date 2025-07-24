@@ -1,6 +1,7 @@
 import gleam/option.{Some}
 import gleeunit/should
 import hanguleam/core/batchim
+import hanguleam/internal/types.{Double, NoBatchim, Single}
 
 // Test character with batchim
 pub fn has_batchim_with_batchim_test() {
@@ -143,7 +144,7 @@ pub fn get_batchim_no_batchim_test() {
   case batchim.get_batchim("가") {
     Ok(info) -> {
       info.character |> should.equal("가")
-      info.batchim_type |> should.equal(batchim.NoBatchim)
+      info.batchim_type |> should.equal(NoBatchim)
       info.components |> should.equal([])
     }
     Error(_) -> should.fail()
@@ -155,7 +156,7 @@ pub fn get_batchim_single_batchim_test() {
   case batchim.get_batchim("강") {
     Ok(info) -> {
       info.character |> should.equal("강")
-      info.batchim_type |> should.equal(batchim.Single)
+      info.batchim_type |> should.equal(Single)
       info.components |> should.equal(["ㅇ"])
     }
     Error(_) -> should.fail()
@@ -164,7 +165,7 @@ pub fn get_batchim_single_batchim_test() {
   case batchim.get_batchim("한") {
     Ok(info) -> {
       info.character |> should.equal("한")
-      info.batchim_type |> should.equal(batchim.Single)
+      info.batchim_type |> should.equal(Single)
       info.components |> should.equal(["ㄴ"])
     }
     Error(_) -> should.fail()
@@ -176,7 +177,7 @@ pub fn get_batchim_double_batchim_test() {
   case batchim.get_batchim("닭") {
     Ok(info) -> {
       info.character |> should.equal("닭")
-      info.batchim_type |> should.equal(batchim.Double)
+      info.batchim_type |> should.equal(Double)
       info.components |> should.equal(["ㄹ", "ㄱ"])
     }
     Error(_) -> should.fail()
@@ -185,7 +186,7 @@ pub fn get_batchim_double_batchim_test() {
   case batchim.get_batchim("값") {
     Ok(info) -> {
       info.character |> should.equal("값")
-      info.batchim_type |> should.equal(batchim.Double)
+      info.batchim_type |> should.equal(Double)
       info.components |> should.equal(["ㅂ", "ㅅ"])
     }
     Error(_) -> should.fail()
@@ -226,7 +227,7 @@ pub fn get_batchim_multi_character_test() {
   case batchim.get_batchim("안녕하세요") {
     Ok(info) -> {
       info.character |> should.equal("요")
-      info.batchim_type |> should.equal(batchim.NoBatchim)
+      info.batchim_type |> should.equal(NoBatchim)
       info.components |> should.equal([])
     }
     Error(_) -> should.fail()
@@ -235,7 +236,7 @@ pub fn get_batchim_multi_character_test() {
   case batchim.get_batchim("한글") {
     Ok(info) -> {
       info.character |> should.equal("글")
-      info.batchim_type |> should.equal(batchim.Single)
+      info.batchim_type |> should.equal(Single)
       info.components |> should.equal(["ㄹ"])
     }
     Error(_) -> should.fail()
@@ -244,7 +245,8 @@ pub fn get_batchim_multi_character_test() {
   case batchim.get_batchim("화가 난 까닭") {
     Ok(info) -> {
       info.character |> should.equal("닭")
-      info.batchim_type |> should.equal(batchim.Double)
+      info.batchim |> should.equal("ㄺ")
+      info.batchim_type |> should.equal(Double)
       info.components |> should.equal(["ㄹ", "ㄱ"])
     }
     Error(_) -> should.fail()
