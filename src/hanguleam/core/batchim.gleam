@@ -6,25 +6,14 @@ import gleam/string
 import hanguleam/internal/constants.{
   complete_hangul_start, get_jongseong_data, jongseongs, number_of_jongseong,
 }
-import hanguleam/internal/utils
-
-pub type BatchimType {
-  NoBatchim
-  Single
-  Double
+import hanguleam/internal/types.{
+  type BatchimInfo, type BatchimType, Double, NoBatchim, Single,
 }
+import hanguleam/internal/utils
 
 pub type BatchimOnlyFilter {
   SingleOnly
   DoubleOnly
-}
-
-pub type BatchimInfo {
-  BatchimInfo(
-    character: String,
-    batchim_type: BatchimType,
-    components: List(String),
-  )
 }
 
 pub type BatchimError {
@@ -48,11 +37,14 @@ pub fn get_batchim(text: String) -> Result(BatchimInfo, BatchimError) {
     True -> {
       let batchim_index = get_batchim_index(codepoint_int)
       let batchim_type = get_batchim_type(batchim_index)
+      let assert Some(batchim) =
+        utils.get_value_by_index(batchim_index, jongseongs)
       let components = get_batchim_components(batchim_index)
 
-      Ok(BatchimInfo(
+      Ok(types.BatchimInfo(
         character: char,
         batchim_type: batchim_type,
+        batchim: batchim,
         components: components,
       ))
     }
