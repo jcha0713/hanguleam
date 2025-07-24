@@ -48,19 +48,16 @@ fn disassemble_char_to_groups(char: String) {
 }
 
 fn disassemble_jamo(char: String) {
-  case char |> utils.get_codepoint_value_from_char |> utils.is_jungseong_range {
-    True -> {
-      case dict.get(constants.get_jungseong_data(), char) {
-        Ok(data) -> data.components
-        Error(_) -> []
-      }
-    }
-    False -> {
-      case dict.get(constants.get_jongseong_data(), char) {
-        Ok(data) -> data.components
-        Error(_) -> []
-      }
-    }
+  let jamo_data = case
+    char |> utils.get_codepoint_value_from_char |> utils.is_jungseong_range
+  {
+    True -> constants.get_jungseong_data()
+    False -> constants.get_jongseong_data()
+  }
+
+  case dict.get(jamo_data, char) {
+    Ok(data) -> data.components
+    Error(_) -> []
   }
 }
 
@@ -102,14 +99,11 @@ fn do_disassemble(
   let assert Some(jongseong) =
     utils.get_value_by_index(jongseong_idx, jongseongs)
 
-  let components = case dict.get(constants.get_jongseong_data(), jongseong) {
-    Ok(data) -> data.components
-    Error(_) -> []
-  }
+  let disassembled_jongseong = disassemble_jamo(jongseong)
 
   Ok(HangulSyllable(
     Choseong(choseong),
     Jungseong(jungseong),
-    Jongseong(string.join(components, "")),
+    Jongseong(string.join(disassembled_jongseong, "")),
   ))
 }

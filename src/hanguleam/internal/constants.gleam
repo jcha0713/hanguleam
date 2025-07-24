@@ -37,73 +37,69 @@ pub const jongseongs = [
   "ㅁ", "ㅂ", "ㅄ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ",
 ]
 
-pub type JungseongData {
-  JungseongData(components: List(String))
+pub type JamoData {
+  JamoData(components: List(String))
 }
 
-pub fn get_jungseong_data() {
+pub fn get_jungseong_data() -> dict.Dict(String, JamoData) {
   dict.from_list([
     // Simple vowels (single component)
-    #("ㅏ", JungseongData(["ㅏ"])),
-    #("ㅐ", JungseongData(["ㅐ"])),
-    #("ㅑ", JungseongData(["ㅑ"])),
-    #("ㅒ", JungseongData(["ㅒ"])),
-    #("ㅓ", JungseongData(["ㅓ"])),
-    #("ㅔ", JungseongData(["ㅔ"])),
-    #("ㅕ", JungseongData(["ㅕ"])),
-    #("ㅖ", JungseongData(["ㅖ"])),
-    #("ㅗ", JungseongData(["ㅗ"])),
-    #("ㅛ", JungseongData(["ㅛ"])),
-    #("ㅜ", JungseongData(["ㅜ"])),
-    #("ㅠ", JungseongData(["ㅠ"])),
-    #("ㅡ", JungseongData(["ㅡ"])),
-    #("ㅣ", JungseongData(["ㅣ"])),
+    #("ㅏ", JamoData(["ㅏ"])),
+    #("ㅐ", JamoData(["ㅐ"])),
+    #("ㅑ", JamoData(["ㅑ"])),
+    #("ㅒ", JamoData(["ㅒ"])),
+    #("ㅓ", JamoData(["ㅓ"])),
+    #("ㅔ", JamoData(["ㅔ"])),
+    #("ㅕ", JamoData(["ㅕ"])),
+    #("ㅖ", JamoData(["ㅖ"])),
+    #("ㅗ", JamoData(["ㅗ"])),
+    #("ㅛ", JamoData(["ㅛ"])),
+    #("ㅜ", JamoData(["ㅜ"])),
+    #("ㅠ", JamoData(["ㅠ"])),
+    #("ㅡ", JamoData(["ㅡ"])),
+    #("ㅣ", JamoData(["ㅣ"])),
     // Compound vowels (multiple components)
-    #("ㅘ", JungseongData(["ㅗ", "ㅏ"])),
-    #("ㅙ", JungseongData(["ㅗ", "ㅐ"])),
-    #("ㅚ", JungseongData(["ㅗ", "ㅣ"])),
-    #("ㅝ", JungseongData(["ㅜ", "ㅓ"])),
-    #("ㅞ", JungseongData(["ㅜ", "ㅔ"])),
-    #("ㅟ", JungseongData(["ㅜ", "ㅣ"])),
-    #("ㅢ", JungseongData(["ㅡ", "ㅣ"])),
+    #("ㅘ", JamoData(["ㅗ", "ㅏ"])),
+    #("ㅙ", JamoData(["ㅗ", "ㅐ"])),
+    #("ㅚ", JamoData(["ㅗ", "ㅣ"])),
+    #("ㅝ", JamoData(["ㅜ", "ㅓ"])),
+    #("ㅞ", JamoData(["ㅜ", "ㅔ"])),
+    #("ㅟ", JamoData(["ㅜ", "ㅣ"])),
+    #("ㅢ", JamoData(["ㅡ", "ㅣ"])),
   ])
 }
 
-pub type JongseongData {
-  JongseongData(components: List(String))
-}
-
-pub fn get_jongseong_data() {
+pub fn get_jongseong_data() -> dict.Dict(String, JamoData) {
   dict.from_list([
-    #("", JongseongData([])),
-    #("ㄱ", JongseongData(["ㄱ"])),
-    #("ㄲ", JongseongData(["ㄲ"])),
-    #("ㄳ", JongseongData(["ㄱ", "ㅅ"])),
-    #("ㄴ", JongseongData(["ㄴ"])),
-    #("ㄵ", JongseongData(["ㄴ", "ㅈ"])),
-    #("ㄶ", JongseongData(["ㄴ", "ㅎ"])),
-    #("ㄷ", JongseongData(["ㄷ"])),
-    #("ㄹ", JongseongData(["ㄹ"])),
-    #("ㄺ", JongseongData(["ㄹ", "ㄱ"])),
-    #("ㄻ", JongseongData(["ㄹ", "ㅁ"])),
-    #("ㄼ", JongseongData(["ㄹ", "ㅂ"])),
-    #("ㄽ", JongseongData(["ㄹ", "ㅅ"])),
-    #("ㄾ", JongseongData(["ㄹ", "ㅌ"])),
-    #("ㄿ", JongseongData(["ㄹ", "ㅍ"])),
-    #("ㅀ", JongseongData(["ㄹ", "ㅎ"])),
-    #("ㅁ", JongseongData(["ㅁ"])),
-    #("ㅂ", JongseongData(["ㅂ"])),
-    #("ㅃ", JongseongData(["ㅃ"])),
-    #("ㅄ", JongseongData(["ㅂ", "ㅅ"])),
-    #("ㅅ", JongseongData(["ㅅ"])),
-    #("ㅆ", JongseongData(["ㅆ"])),
-    #("ㅇ", JongseongData(["ㅇ"])),
-    #("ㅈ", JongseongData(["ㅈ"])),
-    #("ㅉ", JongseongData(["ㅉ"])),
-    #("ㅊ", JongseongData(["ㅊ"])),
-    #("ㅋ", JongseongData(["ㅋ"])),
-    #("ㅌ", JongseongData(["ㅌ"])),
-    #("ㅍ", JongseongData(["ㅍ"])),
-    #("ㅎ", JongseongData(["ㅎ"])),
+    #("", JamoData([])),
+    #("ㄱ", JamoData(["ㄱ"])),
+    #("ㄲ", JamoData(["ㄲ"])),
+    #("ㄳ", JamoData(["ㄱ", "ㅅ"])),
+    #("ㄴ", JamoData(["ㄴ"])),
+    #("ㄵ", JamoData(["ㄴ", "ㅈ"])),
+    #("ㄶ", JamoData(["ㄴ", "ㅎ"])),
+    #("ㄷ", JamoData(["ㄷ"])),
+    #("ㄹ", JamoData(["ㄹ"])),
+    #("ㄺ", JamoData(["ㄹ", "ㄱ"])),
+    #("ㄻ", JamoData(["ㄹ", "ㅁ"])),
+    #("ㄼ", JamoData(["ㄹ", "ㅂ"])),
+    #("ㄽ", JamoData(["ㄹ", "ㅅ"])),
+    #("ㄾ", JamoData(["ㄹ", "ㅌ"])),
+    #("ㄿ", JamoData(["ㄹ", "ㅍ"])),
+    #("ㅀ", JamoData(["ㄹ", "ㅎ"])),
+    #("ㅁ", JamoData(["ㅁ"])),
+    #("ㅂ", JamoData(["ㅂ"])),
+    #("ㅃ", JamoData(["ㅃ"])),
+    #("ㅄ", JamoData(["ㅂ", "ㅅ"])),
+    #("ㅅ", JamoData(["ㅅ"])),
+    #("ㅆ", JamoData(["ㅆ"])),
+    #("ㅇ", JamoData(["ㅇ"])),
+    #("ㅈ", JamoData(["ㅈ"])),
+    #("ㅉ", JamoData(["ㅉ"])),
+    #("ㅊ", JamoData(["ㅊ"])),
+    #("ㅋ", JamoData(["ㅋ"])),
+    #("ㅌ", JamoData(["ㅌ"])),
+    #("ㅍ", JamoData(["ㅍ"])),
+    #("ㅎ", JamoData(["ㅎ"])),
   ])
 }
