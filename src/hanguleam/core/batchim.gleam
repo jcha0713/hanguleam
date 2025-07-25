@@ -30,12 +30,15 @@ pub fn get_batchim(text: String) -> Result(BatchimInfo, BatchimError) {
     get_last_character(text) |> option.to_result(EmptyString),
   )
 
-  let codepoint_int = utils.get_codepoint_value_from_char(char)
+  use codepoint <- result.try(
+    utils.get_codepoint_result_from_char(char)
+    |> result.map_error(fn(_) { InvalidCharacter(char) }),
+  )
 
-  case utils.is_complete_hangul(codepoint_int) {
+  case utils.is_complete_hangul(codepoint) {
     False -> Error(InvalidCharacter(char))
     True -> {
-      let batchim_index = get_batchim_index(codepoint_int)
+      let batchim_index = get_batchim_index(codepoint)
       let batchim_type = get_batchim_type(batchim_index)
       let assert Some(batchim) =
         utils.get_value_by_index(batchim_index, jongseongs)

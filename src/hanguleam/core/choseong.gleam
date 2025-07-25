@@ -32,10 +32,14 @@ fn extract_choseong_from_char(char: String) -> Option(String) {
 }
 
 fn extract_from_complete_hangul(char: String) {
-  let codepoint_int = utils.get_codepoint_value_from_char(char)
-  case utils.is_complete_hangul(codepoint_int) {
-    True -> get_choseong_codepoint(codepoint_int) |> get_choseong_by_index
-    False -> None
+  case utils.get_codepoint_result_from_char(char) {
+    Ok(codepoint) -> {
+      case utils.is_complete_hangul(codepoint) {
+        True -> get_choseong_codepoint(codepoint) |> get_choseong_by_index
+        False -> None
+      }
+    }
+    Error(_) -> None
   }
 }
 

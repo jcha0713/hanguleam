@@ -22,10 +22,10 @@ pub fn is_hangul(codepoint: Int) -> Bool {
   is_complete_hangul(codepoint) || is_hangul_alphabet(codepoint)
 }
 
-pub fn get_codepoint_value_from_char(char: String) -> Int {
+pub fn get_codepoint_result_from_char(char: String) -> Result(Int, Nil) {
   case string.to_utf_codepoints(char) |> list.first {
-    Ok(codepoint) -> string.utf_codepoint_to_int(codepoint)
-    Error(_) -> 0
+    Ok(codepoint) -> Ok(string.utf_codepoint_to_int(codepoint))
+    Error(_) -> Error(Nil)
   }
 }
 

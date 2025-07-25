@@ -1,6 +1,7 @@
 import gleam/dict
 import gleam/list
 import gleam/option.{Some}
+import gleam/result
 import gleam/string
 
 import hanguleam/internal/constants.{
@@ -22,47 +23,51 @@ pub fn disassemble(text: String) -> String {
   text |> disassemble_to_groups |> list.flatten |> string.join("")
 }
 
-pub fn disassemble_to_groups(text: String) {
+pub fn disassemble_to_groups(text: String) -> List(List(String)) {
   text |> string.to_graphemes |> list.map(disassemble_char_to_groups)
 }
 
-fn disassemble_char_to_groups(char: String) {
-  let codepoint = utils.get_codepoint_value_from_char(char)
-
-  case utils.is_complete_hangul(codepoint) {
-    True -> {
-      case disassemble_complete_character(char) {
-        Ok(HangulSyllable(Choseong(cho), Jungseong(jung), Jongseong(jong))) -> {
-          let base_components = [cho] |> list.append(disassemble_jamo(jung))
-          case jong {
-            "" -> base_components
-            _ -> list.append(base_components, string.to_graphemes(jong))
+fn disassemble_char_to_groups(char: String) -> List(String) {
+  case utils.get_codepoint_result_from_char(char) {
+    Ok(codepoint) -> {
+      case utils.is_complete_hangul(codepoint) {
+        True -> {
+          case disassemble_complete_character(char) {
+            Ok(HangulSyllable(Choseong(cho), Jungseong(jung), Jongseong(jong))) -> {
+              let base_components = [cho] |> list.append(disassemble_jamo(jung))
+              case jong {
+                "" -> base_components
+                _ -> list.append(base_components, string.to_graphemes(jong))
+              }
+            }
+            Error(_) -> [char]
           }
         }
-        Error(_) -> [char]
+        False -> {
+          case utils.is_hangul(codepoint) {
+            True -> disassemble_jamo(char)
+            False -> [char]
+          }
+        }
       }
     }
-    False -> {
-      case utils.is_hangul(codepoint) {
-        True -> disassemble_jamo(char)
-        False -> [char]
-      }
-    }
+    Error(_) -> [char]
   }
 }
 
-fn disassemble_jamo(char: String) {
-  let jamo_data = case
-    char
-    |> utils.get_codepoint_value_from_char
-    |> utils.is_jungseong_range
-  {
-    True -> constants.get_vowel_data()
-    False -> constants.get_consonant_data()
-  }
+fn disassemble_jamo(char: String) -> List(String) {
+  case utils.get_codepoint_result_from_char(char) {
+    Ok(codepoint) -> {
+      let jamo_data = case utils.is_jungseong_range(codepoint) {
+        True -> constants.get_vowel_data()
+        False -> constants.get_consonant_data()
+      }
 
-  case dict.get(jamo_data, char) {
-    Ok(data) -> data.components
+      case dict.get(jamo_data, char) {
+        Ok(data) -> data.components
+        Error(_) -> []
+      }
+    }
     Error(_) -> []
   }
 }
@@ -73,11 +78,15 @@ pub fn disassemble_complete_character(
   case char {
     "" -> Error(EmptyInput)
     _ -> {
-      let codepoint_int = utils.get_codepoint_value_from_char(char)
-      case utils.is_complete_hangul(codepoint_int) {
-        True -> do_disassemble(codepoint_int)
+      use codepoint <- result.try(
+        utils.get_codepoint_result_from_char(char)
+        |> result.map_error(fn(_) { NonHangul }),
+      )
+
+      case utils.is_complete_hangul(codepoint) {
+        True -> do_disassemble(codepoint)
         False -> {
-          case utils.is_hangul(codepoint_int) {
+          case utils.is_hangul(codepoint) {
             True -> Error(IncompleteHangul)
             False -> Error(NonHangul)
           }
