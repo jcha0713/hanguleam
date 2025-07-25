@@ -18,6 +18,10 @@ pub type DisassembleError {
   EmptyInput
 }
 
+pub fn disassemble(text: String) -> String {
+  text |> disassemble_to_groups |> list.flatten |> string.join("")
+}
+
 pub fn disassemble_to_groups(text: String) {
   text |> string.to_graphemes |> list.map(disassemble_char_to_groups)
 }
