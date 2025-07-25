@@ -23,11 +23,10 @@ pub fn is_hangul(codepoint: Int) -> Bool {
 }
 
 pub fn get_codepoint_value_from_char(char: String) -> Int {
-  let assert Ok(codepoint) =
-    string.to_utf_codepoints(char)
-    |> list.first
-
-  string.utf_codepoint_to_int(codepoint)
+  case string.to_utf_codepoints(char) |> list.first {
+    Ok(codepoint) -> string.utf_codepoint_to_int(codepoint)
+    Error(_) -> 0
+  }
 }
 
 pub fn get_value_by_index(
