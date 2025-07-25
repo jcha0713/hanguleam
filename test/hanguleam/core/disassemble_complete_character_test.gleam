@@ -73,6 +73,11 @@ pub fn disassemble_complete_character_various_choseong_test() {
     "싸",
     HangulSyllable(Choseong("ㅆ"), Jungseong("ㅏ"), Jongseong("")),
   )
+
+  assert_disassemble_ok(
+    "강아지",
+    HangulSyllable(Choseong("ㄱ"), Jungseong("ㅏ"), Jongseong("ㅇ")),
+  )
 }
 
 pub fn disassemble_complete_character_various_jungseong_test() {
