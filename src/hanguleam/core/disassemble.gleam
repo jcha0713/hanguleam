@@ -49,10 +49,12 @@ fn disassemble_char_to_groups(char: String) {
 
 fn disassemble_jamo(char: String) {
   let jamo_data = case
-    char |> utils.get_codepoint_value_from_char |> utils.is_jungseong_range
+    char
+    |> utils.get_codepoint_value_from_char
+    |> utils.is_jungseong_range
   {
-    True -> constants.get_jungseong_data()
-    False -> constants.get_jongseong_data()
+    True -> constants.get_vowel_data()
+    False -> constants.get_consonant_data()
   }
 
   case dict.get(jamo_data, char) {

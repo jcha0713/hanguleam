@@ -41,7 +41,7 @@ pub type JamoData {
   JamoData(components: List(String))
 }
 
-pub fn get_jungseong_data() -> dict.Dict(String, JamoData) {
+pub fn get_vowel_data() -> dict.Dict(String, JamoData) {
   dict.from_list([
     // Simple vowels (single component)
     #("ㅏ", JamoData(["ㅏ"])),
@@ -69,7 +69,7 @@ pub fn get_jungseong_data() -> dict.Dict(String, JamoData) {
   ])
 }
 
-pub fn get_jongseong_data() -> dict.Dict(String, JamoData) {
+pub fn get_consonant_data() -> dict.Dict(String, JamoData) {
   dict.from_list([
     #("", JamoData([])),
     #("ㄱ", JamoData(["ㄱ"])),
@@ -79,6 +79,7 @@ pub fn get_jongseong_data() -> dict.Dict(String, JamoData) {
     #("ㄵ", JamoData(["ㄴ", "ㅈ"])),
     #("ㄶ", JamoData(["ㄴ", "ㅎ"])),
     #("ㄷ", JamoData(["ㄷ"])),
+    #("ㄸ", JamoData(["ㄸ"])),
     #("ㄹ", JamoData(["ㄹ"])),
     #("ㄺ", JamoData(["ㄹ", "ㄱ"])),
     #("ㄻ", JamoData(["ㄹ", "ㅁ"])),
