@@ -28,30 +28,17 @@ pub fn disassemble_to_groups(text: String) -> List(List(String)) {
 }
 
 fn disassemble_char_to_groups(char: String) -> List(String) {
-  case utils.get_codepoint_result_from_char(char) {
-    Ok(codepoint) -> {
-      case utils.is_complete_hangul(codepoint) {
-        True -> {
-          case disassemble_complete_character(char) {
-            Ok(HangulSyllable(Choseong(cho), Jungseong(jung), Jongseong(jong))) -> {
-              let base_components = [cho] |> list.append(disassemble_jamo(jung))
-              case jong {
-                "" -> base_components
-                _ -> list.append(base_components, string.to_graphemes(jong))
-              }
-            }
-            Error(_) -> [char]
-          }
-        }
-        False -> {
-          case utils.is_hangul(codepoint) {
-            True -> disassemble_jamo(char)
-            False -> [char]
-          }
-        }
+  case disassemble_complete_character(char) {
+    Ok(HangulSyllable(Choseong(cho), Jungseong(jung), Jongseong(jong))) -> {
+      let base_components = [cho] |> list.append(disassemble_jamo(jung))
+      case jong {
+        "" -> base_components
+        _ -> list.append(base_components, string.to_graphemes(jong))
       }
     }
-    Error(_) -> [char]
+    Error(IncompleteHangul) -> disassemble_jamo(char)
+    Error(NonHangul) -> [char]
+    Error(EmptyInput) -> [char]
   }
 }
 
