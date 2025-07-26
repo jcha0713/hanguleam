@@ -1,6 +1,6 @@
 import gleam/dict
 import gleam/list
-import gleam/option.{Some}
+import gleam/option
 import gleam/result
 import gleam/string
 
@@ -101,11 +101,18 @@ fn do_disassemble(
 
   let jongseong_idx = base % number_of_jongseong
 
-  let assert Some(choseong) = utils.get_value_by_index(choseong_idx, choseongs)
-  let assert Some(jungseong) =
+  use choseong <- result.try(
+    utils.get_value_by_index(choseong_idx, choseongs)
+    |> option.to_result(NonHangul),
+  )
+  use jungseong <- result.try(
     utils.get_value_by_index(jungseong_idx, jungseongs)
-  let assert Some(jongseong) =
+    |> option.to_result(NonHangul),
+  )
+  use jongseong <- result.try(
     utils.get_value_by_index(jongseong_idx, jongseongs)
+    |> option.to_result(NonHangul),
+  )
 
   let disassembled_jongseong = disassemble_jamo(jongseong)
 
