@@ -29,16 +29,22 @@ pub fn disassemble_to_groups(text: String) -> List(List(String)) {
 
 fn disassemble_char_to_groups(char: String) -> List(String) {
   case disassemble_complete_character(char) {
-    Ok(HangulSyllable(Choseong(cho), Jungseong(jung), Jongseong(jong))) -> {
-      let base_components = [cho] |> list.append(disassemble_jamo(jung))
-      case jong {
-        "" -> base_components
-        _ -> list.append(base_components, string.to_graphemes(jong))
-      }
-    }
+    Ok(syllable) -> syllable_to_components(syllable)
     Error(IncompleteHangul) -> disassemble_jamo(char)
     Error(NonHangul) -> [char]
     Error(EmptyInput) -> [char]
+  }
+}
+
+fn syllable_to_components(syllable: HangulSyllable) -> List(String) {
+  let HangulSyllable(Choseong(cho), Jungseong(jung), Jongseong(jong)) = syllable
+  [cho]
+  |> list.append(disassemble_jamo(jung))
+  |> fn(base) {
+    case jong {
+      "" -> base
+      _ -> list.append(base, string.to_graphemes(jong))
+    }
   }
 }
 
