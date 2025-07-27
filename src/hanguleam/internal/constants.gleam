@@ -1,5 +1,3 @@
-import gleam/dict
-
 // 가
 pub const complete_hangul_start = 0xAC00
 
@@ -37,70 +35,130 @@ pub const jongseongs = [
   "ㅁ", "ㅂ", "ㅄ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ",
 ]
 
-pub type JamoData {
-  JamoData(components: List(String))
+pub fn disassemble_vowel_string(char: String) -> Result(String, Nil) {
+  case char {
+    "ㅏ" -> Ok("ㅏ")
+    "ㅐ" -> Ok("ㅐ")
+    "ㅑ" -> Ok("ㅑ")
+    "ㅒ" -> Ok("ㅒ")
+    "ㅓ" -> Ok("ㅓ")
+    "ㅔ" -> Ok("ㅔ")
+    "ㅕ" -> Ok("ㅕ")
+    "ㅖ" -> Ok("ㅖ")
+    "ㅗ" -> Ok("ㅗ")
+    "ㅘ" -> Ok("ㅗㅏ")
+    "ㅙ" -> Ok("ㅗㅐ")
+    "ㅚ" -> Ok("ㅗㅣ")
+    "ㅛ" -> Ok("ㅛ")
+    "ㅜ" -> Ok("ㅜ")
+    "ㅝ" -> Ok("ㅜㅓ")
+    "ㅞ" -> Ok("ㅜㅔ")
+    "ㅟ" -> Ok("ㅜㅣ")
+    "ㅠ" -> Ok("ㅠ")
+    "ㅡ" -> Ok("ㅡ")
+    "ㅢ" -> Ok("ㅡㅣ")
+    "ㅣ" -> Ok("ㅣ")
+    _ -> Error(Nil)
+  }
 }
 
-pub fn get_vowel_data() -> dict.Dict(String, JamoData) {
-  dict.from_list([
-    // Simple vowels (single component)
-    #("ㅏ", JamoData(["ㅏ"])),
-    #("ㅐ", JamoData(["ㅐ"])),
-    #("ㅑ", JamoData(["ㅑ"])),
-    #("ㅒ", JamoData(["ㅒ"])),
-    #("ㅓ", JamoData(["ㅓ"])),
-    #("ㅔ", JamoData(["ㅔ"])),
-    #("ㅕ", JamoData(["ㅕ"])),
-    #("ㅖ", JamoData(["ㅖ"])),
-    #("ㅗ", JamoData(["ㅗ"])),
-    #("ㅛ", JamoData(["ㅛ"])),
-    #("ㅜ", JamoData(["ㅜ"])),
-    #("ㅠ", JamoData(["ㅠ"])),
-    #("ㅡ", JamoData(["ㅡ"])),
-    #("ㅣ", JamoData(["ㅣ"])),
-    // Compound vowels (multiple components)
-    #("ㅘ", JamoData(["ㅗ", "ㅏ"])),
-    #("ㅙ", JamoData(["ㅗ", "ㅐ"])),
-    #("ㅚ", JamoData(["ㅗ", "ㅣ"])),
-    #("ㅝ", JamoData(["ㅜ", "ㅓ"])),
-    #("ㅞ", JamoData(["ㅜ", "ㅔ"])),
-    #("ㅟ", JamoData(["ㅜ", "ㅣ"])),
-    #("ㅢ", JamoData(["ㅡ", "ㅣ"])),
-  ])
+pub fn assemble_vowel_string(components: String) -> Result(String, Nil) {
+  case components {
+    "ㅏ" -> Ok("ㅏ")
+    "ㅐ" -> Ok("ㅐ")
+    "ㅑ" -> Ok("ㅑ")
+    "ㅒ" -> Ok("ㅒ")
+    "ㅓ" -> Ok("ㅓ")
+    "ㅔ" -> Ok("ㅔ")
+    "ㅕ" -> Ok("ㅕ")
+    "ㅖ" -> Ok("ㅖ")
+    "ㅗ" -> Ok("ㅗ")
+    "ㅗㅏ" -> Ok("ㅘ")
+    "ㅗㅐ" -> Ok("ㅙ")
+    "ㅗㅣ" -> Ok("ㅚ")
+    "ㅛ" -> Ok("ㅛ")
+    "ㅜ" -> Ok("ㅜ")
+    "ㅜㅓ" -> Ok("ㅝ")
+    "ㅜㅔ" -> Ok("ㅞ")
+    "ㅜㅣ" -> Ok("ㅟ")
+    "ㅠ" -> Ok("ㅠ")
+    "ㅡ" -> Ok("ㅡ")
+    "ㅡㅣ" -> Ok("ㅢ")
+    "ㅣ" -> Ok("ㅣ")
+    _ -> Error(Nil)
+  }
 }
 
-pub fn get_consonant_data() -> dict.Dict(String, JamoData) {
-  dict.from_list([
-    #("", JamoData([])),
-    #("ㄱ", JamoData(["ㄱ"])),
-    #("ㄲ", JamoData(["ㄲ"])),
-    #("ㄳ", JamoData(["ㄱ", "ㅅ"])),
-    #("ㄴ", JamoData(["ㄴ"])),
-    #("ㄵ", JamoData(["ㄴ", "ㅈ"])),
-    #("ㄶ", JamoData(["ㄴ", "ㅎ"])),
-    #("ㄷ", JamoData(["ㄷ"])),
-    #("ㄸ", JamoData(["ㄸ"])),
-    #("ㄹ", JamoData(["ㄹ"])),
-    #("ㄺ", JamoData(["ㄹ", "ㄱ"])),
-    #("ㄻ", JamoData(["ㄹ", "ㅁ"])),
-    #("ㄼ", JamoData(["ㄹ", "ㅂ"])),
-    #("ㄽ", JamoData(["ㄹ", "ㅅ"])),
-    #("ㄾ", JamoData(["ㄹ", "ㅌ"])),
-    #("ㄿ", JamoData(["ㄹ", "ㅍ"])),
-    #("ㅀ", JamoData(["ㄹ", "ㅎ"])),
-    #("ㅁ", JamoData(["ㅁ"])),
-    #("ㅂ", JamoData(["ㅂ"])),
-    #("ㅃ", JamoData(["ㅃ"])),
-    #("ㅄ", JamoData(["ㅂ", "ㅅ"])),
-    #("ㅅ", JamoData(["ㅅ"])),
-    #("ㅆ", JamoData(["ㅆ"])),
-    #("ㅇ", JamoData(["ㅇ"])),
-    #("ㅈ", JamoData(["ㅈ"])),
-    #("ㅉ", JamoData(["ㅉ"])),
-    #("ㅊ", JamoData(["ㅊ"])),
-    #("ㅋ", JamoData(["ㅋ"])),
-    #("ㅌ", JamoData(["ㅌ"])),
-    #("ㅍ", JamoData(["ㅍ"])),
-    #("ㅎ", JamoData(["ㅎ"])),
-  ])
+pub fn disassemble_consonant_string(char: String) -> Result(String, Nil) {
+  case char {
+    "" -> Ok("")
+    "ㄱ" -> Ok("ㄱ")
+    "ㄲ" -> Ok("ㄲ")
+    "ㄳ" -> Ok("ㄱㅅ")
+    "ㄴ" -> Ok("ㄴ")
+    "ㄵ" -> Ok("ㄴㅈ")
+    "ㄶ" -> Ok("ㄴㅎ")
+    "ㄷ" -> Ok("ㄷ")
+    "ㄸ" -> Ok("ㄸ")
+    "ㄹ" -> Ok("ㄹ")
+    "ㄺ" -> Ok("ㄹㄱ")
+    "ㄻ" -> Ok("ㄹㅁ")
+    "ㄼ" -> Ok("ㄹㅂ")
+    "ㄽ" -> Ok("ㄹㅅ")
+    "ㄾ" -> Ok("ㄹㅌ")
+    "ㄿ" -> Ok("ㄹㅍ")
+    "ㅀ" -> Ok("ㄹㅎ")
+    "ㅁ" -> Ok("ㅁ")
+    "ㅂ" -> Ok("ㅂ")
+    "ㅃ" -> Ok("ㅃ")
+    "ㅄ" -> Ok("ㅂㅅ")
+    "ㅅ" -> Ok("ㅅ")
+    "ㅆ" -> Ok("ㅆ")
+    "ㅇ" -> Ok("ㅇ")
+    "ㅈ" -> Ok("ㅈ")
+    "ㅉ" -> Ok("ㅉ")
+    "ㅊ" -> Ok("ㅊ")
+    "ㅋ" -> Ok("ㅋ")
+    "ㅌ" -> Ok("ㅌ")
+    "ㅍ" -> Ok("ㅍ")
+    "ㅎ" -> Ok("ㅎ")
+    _ -> Error(Nil)
+  }
+}
+
+pub fn assemble_consonant_string(components: String) -> Result(String, Nil) {
+  case components {
+    "" -> Ok("")
+    "ㄱ" -> Ok("ㄱ")
+    "ㄲ" -> Ok("ㄲ")
+    "ㄱㅅ" -> Ok("ㄳ")
+    "ㄴ" -> Ok("ㄴ")
+    "ㄴㅈ" -> Ok("ㄵ")
+    "ㄴㅎ" -> Ok("ㄶ")
+    "ㄷ" -> Ok("ㄷ")
+    "ㄸ" -> Ok("ㄸ")
+    "ㄹ" -> Ok("ㄹ")
+    "ㄹㄱ" -> Ok("ㄺ")
+    "ㄹㅁ" -> Ok("ㄻ")
+    "ㄹㅂ" -> Ok("ㄼ")
+    "ㄹㅅ" -> Ok("ㄽ")
+    "ㄹㅌ" -> Ok("ㄾ")
+    "ㄹㅍ" -> Ok("ㄿ")
+    "ㄹㅎ" -> Ok("ㅀ")
+    "ㅁ" -> Ok("ㅁ")
+    "ㅂ" -> Ok("ㅂ")
+    "ㅃ" -> Ok("ㅃ")
+    "ㅂㅅ" -> Ok("ㅄ")
+    "ㅅ" -> Ok("ㅅ")
+    "ㅆ" -> Ok("ㅆ")
+    "ㅇ" -> Ok("ㅇ")
+    "ㅈ" -> Ok("ㅈ")
+    "ㅉ" -> Ok("ㅉ")
+    "ㅊ" -> Ok("ㅊ")
+    "ㅋ" -> Ok("ㅋ")
+    "ㅌ" -> Ok("ㅌ")
+    "ㅍ" -> Ok("ㅍ")
+    "ㅎ" -> Ok("ㅎ")
+    _ -> Error(Nil)
+  }
 }

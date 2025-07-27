@@ -1,10 +1,9 @@
-import gleam/dict
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/result
 import gleam/string
 import hanguleam/internal/constants.{
-  complete_hangul_start, get_consonant_data, jongseongs, number_of_jongseong,
+  complete_hangul_start, jongseongs, number_of_jongseong,
 }
 import hanguleam/internal/types.{
   type BatchimInfo, type BatchimType, Double, NoBatchim, Single,
@@ -99,8 +98,8 @@ fn filter_batchim(
 fn get_batchim_components(batchim_index: Int) -> List(String) {
   case utils.get_value_by_index(batchim_index, jongseongs) {
     Some(char) ->
-      case dict.get(get_consonant_data(), char) {
-        Ok(info) -> info.components
+      case constants.disassemble_consonant_string(char) {
+        Ok(components) -> string.to_graphemes(components)
         Error(_) -> []
       }
     None -> []

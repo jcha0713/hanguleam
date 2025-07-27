@@ -1,4 +1,3 @@
-import gleam/dict
 import gleam/list
 import gleam/option
 import gleam/result
@@ -51,13 +50,13 @@ fn syllable_to_components(syllable: HangulSyllable) -> List(String) {
 fn disassemble_jamo(char: String) -> List(String) {
   case utils.get_codepoint_result_from_char(char) {
     Ok(codepoint) -> {
-      let jamo_data = case utils.is_jungseong_range(codepoint) {
-        True -> constants.get_vowel_data()
-        False -> constants.get_consonant_data()
+      let components = case utils.is_jungseong_range(codepoint) {
+        True -> constants.disassemble_vowel_string(char)
+        False -> constants.disassemble_consonant_string(char)
       }
 
-      case dict.get(jamo_data, char) {
-        Ok(data) -> data.components
+      case components {
+        Ok(data) -> string.to_graphemes(data)
         Error(_) -> []
       }
     }
