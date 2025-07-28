@@ -16,12 +16,12 @@ pub fn main() {
         label: "get_choseong (to_graphemes)",
         callable: fn(test_data) { fn() { choseong.get_choseong(test_data) } },
       ),
-      benchmark.Function(
-        label: "get_choseong_recurse (pop_grapheme)",
-        callable: fn(test_data) {
-          fn() { choseong.get_choseong_recurse(test_data) }
-        },
-      ),
+      // benchmark.Function(
+    //   label: "get_choseong_recurse (pop_grapheme)",
+    //   callable: fn(test_data) {
+    //     fn() { choseong.get_choseong_recurse(test_data) }
+    //   },
+    // ),
     ],
     [
       benchmark.Data(

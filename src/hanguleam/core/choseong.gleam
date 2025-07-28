@@ -6,11 +6,11 @@ import hanguleam/internal/constants.{
 }
 import hanguleam/internal/utils
 
-pub fn get_choseong_recurse(word: String) -> String {
-  do_recurse(word, "")
+pub fn get_choseong(word: String) -> String {
+  do_get_choseong(word, "")
 }
 
-fn do_recurse(word: String, accumulator: String) -> String {
+fn do_get_choseong(word: String, accumulator: String) -> String {
   case string.pop_grapheme(word) {
     Ok(#(head, tail)) -> {
       let extracted = case head {
@@ -23,28 +23,10 @@ fn do_recurse(word: String, accumulator: String) -> String {
             None -> ""
           }
       }
-      do_recurse(tail, accumulator <> extracted)
+      do_get_choseong(tail, accumulator <> extracted)
     }
     Error(_) -> accumulator
   }
-}
-
-pub fn get_choseong(word: String) -> String {
-  word
-  |> string.to_graphemes
-  |> list.filter_map(fn(char) {
-    case char {
-      " " -> Ok(" ")
-      "\t" -> Ok("\t")
-      "\n" -> Ok("\n")
-      _ ->
-        case extract_choseong_from_char(char) {
-          Some(choseong) -> Ok(choseong)
-          None -> Error(Nil)
-        }
-    }
-  })
-  |> string.concat
 }
 
 fn extract_choseong_from_char(char: String) -> Option(String) {
