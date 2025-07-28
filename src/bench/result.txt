@@ -1,0 +1,275 @@
+================================================================================
+==== data set: Small Korean text (100 chars)
+================================================================================
+
+Not all of your protocols have been consolidated. In order to achieve the
+best possible accuracy for benchmarks, please ensure protocol
+consolidation is enabled in your benchmarking environment.
+
+Operating System: macOS
+CPU Information: Apple M4
+Number of Available Cores: 10
+Available memory: 16 GB
+Elixir 1.18.4
+Erlang 28.0.1
+JIT enabled: true
+
+Benchmark suite executing with the following configuration:
+warmup: 3 s
+time: 5 s
+memory time: 8 s
+reduction time: 4 s
+parallel: 1
+inputs: none specified
+Estimated total run time: 40 s
+
+Benchmarking get_choseong (to_graphemes) ...
+Benchmarking get_choseong_recurse (pop_grapheme) ...
+Calculating statistics...
+Formatting results...
+
+Name                                          ips        average  deviation         median         99th %
+get_choseong_recurse (pop_grapheme)       41.80 K       23.92 μs     ±7.82%       23.25 μs       29.50 μs
+get_choseong (to_graphemes)               39.54 K       25.29 μs    ±17.30%       23.67 μs       37.88 μs
+
+Comparison:
+get_choseong_recurse (pop_grapheme)       41.80 K
+get_choseong (to_graphemes)               39.54 K - 1.06x slower +1.37 μs
+
+Memory usage statistics:
+
+Name                                   Memory usage
+get_choseong_recurse (pop_grapheme)        49.73 KB
+get_choseong (to_graphemes)                60.67 KB - 1.22x memory usage +10.94 KB
+
+**All measurements for memory usage were the same**
+
+Reduction count statistics:
+
+Name                                Reduction count
+get_choseong_recurse (pop_grapheme)          7.31 K
+get_choseong (to_graphemes)                  7.86 K - 1.08x reduction count +0.56 K
+
+**All measurements for reduction count were the same**
+
+
+================================================================================
+==== data set: Medium Korean text (1,000 chars)
+================================================================================
+
+Not all of your protocols have been consolidated. In order to achieve the
+best possible accuracy for benchmarks, please ensure protocol
+consolidation is enabled in your benchmarking environment.
+
+Operating System: macOS
+CPU Information: Apple M4
+Number of Available Cores: 10
+Available memory: 16 GB
+Elixir 1.18.4
+Erlang 28.0.1
+JIT enabled: true
+
+Benchmark suite executing with the following configuration:
+warmup: 3 s
+time: 5 s
+memory time: 8 s
+reduction time: 4 s
+parallel: 1
+inputs: none specified
+Estimated total run time: 40 s
+
+Benchmarking get_choseong (to_graphemes) ...
+Benchmarking get_choseong_recurse (pop_grapheme) ...
+Calculating statistics...
+Formatting results...
+
+Name                                          ips        average  deviation         median         99th %
+get_choseong_recurse (pop_grapheme)        4.08 K      245.03 μs     ±4.51%      245.17 μs      282.30 μs
+get_choseong (to_graphemes)                3.64 K      274.60 μs    ±14.95%      259.15 μs      390.84 μs
+
+Comparison:
+get_choseong_recurse (pop_grapheme)        4.08 K
+get_choseong (to_graphemes)                3.64 K - 1.12x slower +29.58 μs
+
+Memory usage statistics:
+
+Name                                   Memory usage
+get_choseong_recurse (pop_grapheme)       492.70 KB
+get_choseong (to_graphemes)               598.09 KB - 1.21x memory usage +105.39 KB
+
+**All measurements for memory usage were the same**
+
+Reduction count statistics:
+
+Name                                Reduction count
+get_choseong_recurse (pop_grapheme)         73.40 K
+get_choseong (to_graphemes)                 79.74 K - 1.09x reduction count +6.34 K
+
+**All measurements for reduction count were the same**
+
+
+================================================================================
+==== data set: Large Korean text (10,000 chars)
+================================================================================
+
+Not all of your protocols have been consolidated. In order to achieve the
+best possible accuracy for benchmarks, please ensure protocol
+consolidation is enabled in your benchmarking environment.
+
+Operating System: macOS
+CPU Information: Apple M4
+Number of Available Cores: 10
+Available memory: 16 GB
+Elixir 1.18.4
+Erlang 28.0.1
+JIT enabled: true
+
+Benchmark suite executing with the following configuration:
+warmup: 3 s
+time: 5 s
+memory time: 8 s
+reduction time: 4 s
+parallel: 1
+inputs: none specified
+Estimated total run time: 40 s
+
+Benchmarking get_choseong (to_graphemes) ...
+Benchmarking get_choseong_recurse (pop_grapheme) ...
+Calculating statistics...
+Formatting results...
+
+Name                                          ips        average  deviation         median         99th %
+get_choseong_recurse (pop_grapheme)        407.47        2.45 ms     ±1.94%        2.45 ms        2.64 ms
+get_choseong (to_graphemes)                375.03        2.67 ms     ±3.83%        2.68 ms        2.90 ms
+
+Comparison:
+get_choseong_recurse (pop_grapheme)        407.47
+get_choseong (to_graphemes)                375.03 - 1.09x slower +0.21 ms
+
+Memory usage statistics:
+
+Name                                   Memory usage
+get_choseong_recurse (pop_grapheme)         4.81 MB
+get_choseong (to_graphemes)                 5.62 MB - 1.17x memory usage +0.81 MB
+
+**All measurements for memory usage were the same**
+
+Reduction count statistics:
+
+Name                                Reduction count
+get_choseong_recurse (pop_grapheme)        734.30 K
+get_choseong (to_graphemes)                786.55 K - 1.07x reduction count +52.25 K
+
+**All measurements for reduction count were the same**
+
+
+================================================================================
+==== data set: Very large Korean text (100,000 chars)
+================================================================================
+
+Not all of your protocols have been consolidated. In order to achieve the
+best possible accuracy for benchmarks, please ensure protocol
+consolidation is enabled in your benchmarking environment.
+
+Operating System: macOS
+CPU Information: Apple M4
+Number of Available Cores: 10
+Available memory: 16 GB
+Elixir 1.18.4
+Erlang 28.0.1
+JIT enabled: true
+
+Benchmark suite executing with the following configuration:
+warmup: 3 s
+time: 5 s
+memory time: 8 s
+reduction time: 4 s
+parallel: 1
+inputs: none specified
+Estimated total run time: 40 s
+
+Benchmarking get_choseong (to_graphemes) ...
+Benchmarking get_choseong_recurse (pop_grapheme) ...
+Calculating statistics...
+Formatting results...
+
+Name                                          ips        average  deviation         median         99th %
+get_choseong_recurse (pop_grapheme)         35.97       27.80 ms     ±1.97%       27.84 ms       28.93 ms
+get_choseong (to_graphemes)                 30.58       32.70 ms    ±12.72%       35.00 ms       38.43 ms
+
+Comparison:
+get_choseong_recurse (pop_grapheme)         35.97
+get_choseong (to_graphemes)                 30.58 - 1.18x slower +4.90 ms
+
+Memory usage statistics:
+
+Name                                   Memory usage
+get_choseong_recurse (pop_grapheme)        48.07 MB
+get_choseong (to_graphemes)                57.54 MB - 1.20x memory usage +9.48 MB
+
+**All measurements for memory usage were the same**
+
+Reduction count statistics:
+
+Name                                        average  deviation         median         99th %
+get_choseong_recurse (pop_grapheme)          7.34 M     ±0.00%         7.34 M         7.34 M
+get_choseong (to_graphemes)                  7.75 M     ±0.00%         7.75 M         7.75 M
+
+Comparison:
+get_choseong_recurse (pop_grapheme)          7.34 M
+get_choseong (to_graphemes)                  7.75 M - 1.06x reduction count +0.40 M
+
+
+================================================================================
+==== data set: Mixed content (Korean + spaces + punctuation)
+================================================================================
+
+Not all of your protocols have been consolidated. In order to achieve the
+best possible accuracy for benchmarks, please ensure protocol
+consolidation is enabled in your benchmarking environment.
+
+Operating System: macOS
+CPU Information: Apple M4
+Number of Available Cores: 10
+Available memory: 16 GB
+Elixir 1.18.4
+Erlang 28.0.1
+JIT enabled: true
+
+Benchmark suite executing with the following configuration:
+warmup: 3 s
+time: 5 s
+memory time: 8 s
+reduction time: 4 s
+parallel: 1
+inputs: none specified
+Estimated total run time: 40 s
+
+Benchmarking get_choseong (to_graphemes) ...
+Benchmarking get_choseong_recurse (pop_grapheme) ...
+Calculating statistics...
+Formatting results...
+
+Name                                          ips        average  deviation         median         99th %
+get_choseong_recurse (pop_grapheme)        2.36 K      424.06 μs     ±2.95%      422.18 μs      466.65 μs
+get_choseong (to_graphemes)                2.06 K      485.27 μs     ±6.66%      480.56 μs      579.31 μs
+
+Comparison:
+get_choseong_recurse (pop_grapheme)        2.36 K
+get_choseong (to_graphemes)                2.06 K - 1.14x slower +61.21 μs
+
+Memory usage statistics:
+
+Name                                   Memory usage
+get_choseong_recurse (pop_grapheme)         0.90 MB
+get_choseong (to_graphemes)                 1.08 MB - 1.20x memory usage +0.178 MB
+
+**All measurements for memory usage were the same**
+
+Reduction count statistics:
+
+Name                                Reduction count
+get_choseong_recurse (pop_grapheme)        126.31 K
+get_choseong (to_graphemes)                138.66 K - 1.10x reduction count +12.34 K
+
+**All measurements for reduction count were the same**
