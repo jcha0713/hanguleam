@@ -40,7 +40,7 @@ fn extract_from_complete_hangul(char: String) {
   case utils.get_codepoint_result_from_char(char) {
     Ok(codepoint) -> {
       case utils.is_complete_hangul(codepoint) {
-        True -> get_choseong_codepoint(codepoint) |> get_choseong_by_index
+        True -> get_choseong_index(codepoint) |> get_choseong_by_index
         False -> None
       }
     }
@@ -48,11 +48,11 @@ fn extract_from_complete_hangul(char: String) {
   }
 }
 
-fn get_choseong_by_index(index: Int) -> Option(String) {
-  utils.get_value_by_index(index, choseongs)
-}
-
-fn get_choseong_codepoint(codepoint: Int) -> Int {
+fn get_choseong_index(codepoint: Int) -> Int {
   let base = codepoint - complete_hangul_start
   base / { number_of_jungseong * number_of_jongseong }
+}
+
+fn get_choseong_by_index(index: Int) -> Option(String) {
+  utils.get_value_by_index(index, choseongs)
 }
