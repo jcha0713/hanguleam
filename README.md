@@ -89,6 +89,30 @@ pub fn main() {
 }
 ```
 
+### Validate Korean jamo components
+
+```gleam
+import hanguleam
+
+pub fn main() {
+  // Check if character can be initial consonant (choseong)
+  hanguleam.can_be_choseong("ㄱ") // True
+  hanguleam.can_be_choseong("ㅏ") // False (vowel)
+  hanguleam.can_be_choseong("가") // False (complete syllable)
+
+  // Check if character can be medial vowel (jungseong)
+  hanguleam.can_be_jungseong("ㅏ") // True
+  hanguleam.can_be_jungseong("ㅗㅏ") // True (complex vowel ㅘ)
+  hanguleam.can_be_jungseong("ㄱ") // False (consonant)
+
+  // Check if character can be final consonant (jongseong)
+  hanguleam.can_be_jongseong("ㄱ") // True
+  hanguleam.can_be_jongseong("ㄱㅅ") // True (double consonant ㄳ)
+  hanguleam.can_be_jongseong("") // True (no final consonant)
+  hanguleam.can_be_jongseong("ㅏ") // False (vowel)
+}
+```
+
 ## Development
 
 ```sh
@@ -109,6 +133,9 @@ gleam run   # Run the project
 | **disassemble** | `disassemble` | Break down Hangul characters into constituent jamo |
 | **disassemble** | `disassemble_to_groups` | Disassemble characters into grouped jamo arrays |
 | **disassemble** | `disassemble_complete_character` | Disassemble single complete Hangul with detailed structure |
+| **validate** | `can_be_choseong` | Check if character can be used as initial consonant |
+| **validate** | `can_be_jungseong` | Check if character can be used as medial vowel |
+| **validate** | `can_be_jongseong` | Check if character can be used as final consonant |
 
 ### Function Details
 
@@ -132,3 +159,12 @@ Disassembles Korean characters into groups of jamo components. Each character be
 
 #### `disassemble_complete_character(char: String) -> Result(HangulSyllable, DisassembleError)`
 Disassembles a single complete Hangul character into structured components (choseong, jungseong, jongseong). Only works with complete syllables in the 가-힣 range.
+
+#### `can_be_choseong(char: String) -> Bool`
+Checks if a given character can be used as a choseong (initial consonant) in Korean Hangul. Returns `True` for valid initial consonants like ㄱ, ㄴ, ㄷ, etc.
+
+#### `can_be_jungseong(char: String) -> Bool`
+Checks if a given character can be used as a jungseong (medial vowel) in Korean Hangul. Supports both single vowels (ㅏ, ㅓ, ㅗ, etc.) and complex vowels (ㅘ, ㅙ, ㅚ, etc.).
+
+#### `can_be_jongseong(char: String) -> Bool`
+Checks if a given character can be used as a jongseong (final consonant) in Korean Hangul. Supports single consonants, double consonants, and empty strings (no final consonant).
