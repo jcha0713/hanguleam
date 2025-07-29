@@ -54,5 +54,5 @@ fn get_choseong_index(codepoint: Int) -> Int {
 }
 
 fn get_choseong_by_index(index: Int) -> Option(String) {
-  utils.get_value_by_index(index, choseongs)
+  utils.get_value_by_index(index, choseongs) |> option.from_result()
 }

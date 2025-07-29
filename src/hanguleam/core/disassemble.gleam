@@ -102,15 +102,15 @@ fn do_disassemble(
 
   use choseong <- result.try(
     utils.get_value_by_index(choseong_idx, choseongs)
-    |> option.to_result(NonHangul),
+    |> result.map_error(fn(_) { NonHangul }),
   )
   use jungseong <- result.try(
     utils.get_value_by_index(jungseong_idx, jungseongs)
-    |> option.to_result(NonHangul),
+    |> result.map_error(fn(_) { NonHangul }),
   )
   use jongseong <- result.try(
     utils.get_value_by_index(jongseong_idx, jongseongs)
-    |> option.to_result(NonHangul),
+    |> result.map_error(fn(_) { NonHangul }),
   )
 
   let disassembled_jongseong = disassemble_jamo(jongseong)

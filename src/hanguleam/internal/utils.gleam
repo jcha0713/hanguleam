@@ -1,5 +1,4 @@
 import gleam/list
-import gleam/option.{type Option, None}
 import gleam/string
 import hanguleam/internal/constants.{
   complete_hangul_end, complete_hangul_start, hangul_jamo_end, hangul_jamo_start,
@@ -32,9 +31,6 @@ pub fn get_codepoint_result_from_char(char: String) -> Result(Int, Nil) {
 pub fn get_value_by_index(
   index: Int,
   value_list: List(String),
-) -> Option(String) {
-  case index >= 0 && index < list.length(value_list) {
-    True -> value_list |> list.drop(index) |> list.first |> option.from_result
-    False -> None
-  }
+) -> Result(String, Nil) {
+  value_list |> list.drop(index) |> list.first
 }

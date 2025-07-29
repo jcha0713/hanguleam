@@ -26,7 +26,7 @@ pub type HasBatchimOptions {
 
 pub fn get_batchim(text: String) -> Result(BatchimInfo, BatchimError) {
   use char <- result.try(
-    get_last_character(text) |> option.to_result(EmptyString),
+    string.last(text) |> result.map_error(fn(_) { EmptyString }),
   )
 
   use codepoint <- result.try(
@@ -38,16 +38,22 @@ pub fn get_batchim(text: String) -> Result(BatchimInfo, BatchimError) {
     False -> Error(InvalidCharacter(char))
     True -> {
       let batchim_index = get_batchim_index(codepoint)
-      let batchim_type = get_batchim_type(batchim_index)
-      let assert Some(batchim) =
+      use batchim <- result.try(
         utils.get_value_by_index(batchim_index, jongseongs)
-      let components = get_batchim_components(batchim_index)
+        |> result.map_error(fn(_) { InvalidCharacter(char) }),
+      )
+      use components <- result.try(
+        constants.disassemble_consonant_string(batchim)
+        |> result.map(string.to_graphemes)
+        |> result.map_error(fn(_) { InvalidCharacter(char) }),
+      )
+      let batchim_type = get_batchim_type(components)
 
       Ok(types.BatchimInfo(
         character: char,
-        batchim_type: batchim_type,
-        batchim: batchim,
-        components: components,
+        batchim_type:,
+        batchim:,
+        components:,
       ))
     }
   }
@@ -72,15 +78,11 @@ pub fn has_batchim_with_options(
   }
 }
 
-fn get_batchim_type(batchim_index: Int) -> BatchimType {
-  case batchim_index {
-    0 -> NoBatchim
-    _ ->
-      case get_batchim_length(batchim_index) {
-        1 -> Single
-        2 -> Double
-        _ -> NoBatchim
-      }
+fn get_batchim_type(components: List(String)) -> BatchimType {
+  case list.length(components) {
+    1 -> Single
+    2 -> Double
+    _ -> NoBatchim
   }
 }
 
@@ -93,25 +95,6 @@ fn filter_batchim(
     Some(SingleOnly) -> batchim_type == Single
     Some(DoubleOnly) -> batchim_type == Double
   }
-}
-
-fn get_batchim_components(batchim_index: Int) -> List(String) {
-  case utils.get_value_by_index(batchim_index, jongseongs) {
-    Some(char) ->
-      case constants.disassemble_consonant_string(char) {
-        Ok(components) -> string.to_graphemes(components)
-        Error(_) -> []
-      }
-    None -> []
-  }
-}
-
-fn get_batchim_length(batchim_index: Int) -> Int {
-  get_batchim_components(batchim_index) |> list.length
-}
-
-fn get_last_character(text: String) -> Option(String) {
-  text |> string.to_graphemes |> list.last |> option.from_result
 }
 
 fn get_batchim_index(codepoint: Int) -> Int {
