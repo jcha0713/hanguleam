@@ -1,5 +1,4 @@
 import gleam/list
-import gleam/option
 import gleam/result
 import gleam/string
 
@@ -19,11 +18,34 @@ pub type DisassembleError {
 }
 
 pub fn disassemble(text: String) -> String {
-  text |> disassemble_to_groups |> list.flatten |> string.join("")
+  do_disassemble(text, "")
+}
+
+fn do_disassemble(text: String, accumulator: String) -> String {
+  case string.pop_grapheme(text) {
+    Ok(#(head, tail)) -> {
+      let components = disassemble_char_to_groups(head) |> string.join("")
+      do_disassemble(tail, accumulator <> components)
+    }
+    Error(_) -> accumulator
+  }
 }
 
 pub fn disassemble_to_groups(text: String) -> List(List(String)) {
-  text |> string.to_graphemes |> list.map(disassemble_char_to_groups)
+  do_disassemble_to_groups(text, []) |> list.reverse
+}
+
+fn do_disassemble_to_groups(
+  text: String,
+  accumulator: List(List(String)),
+) -> List(List(String)) {
+  case string.pop_grapheme(text) {
+    Ok(#(head, tail)) -> {
+      let group = disassemble_char_to_groups(head)
+      do_disassemble_to_groups(tail, [group, ..accumulator])
+    }
+    Error(_) -> accumulator
+  }
 }
 
 fn disassemble_char_to_groups(char: String) -> List(String) {
@@ -48,18 +70,17 @@ fn syllable_to_components(syllable: HangulSyllable) -> List(String) {
 }
 
 fn disassemble_jamo(char: String) -> List(String) {
-  case utils.get_codepoint_result_from_char(char) {
-    Ok(codepoint) -> {
-      let components = case utils.is_jungseong_range(codepoint) {
-        True -> constants.disassemble_vowel_string(char)
-        False -> constants.disassemble_consonant_string(char)
-      }
+  let jamo = {
+    use codepoint <- result.try(utils.get_codepoint_result_from_char(char))
 
-      case components {
-        Ok(data) -> string.to_graphemes(data)
-        Error(_) -> []
-      }
+    case utils.is_jungseong_range(codepoint) {
+      True -> constants.disassemble_vowel_string(char)
+      False -> constants.disassemble_consonant_string(char)
     }
+  }
+
+  case jamo {
+    Ok(components) -> string.split(components, "")
     Error(_) -> []
   }
 }
@@ -76,7 +97,7 @@ pub fn disassemble_complete_character(
       )
 
       case utils.is_complete_hangul(codepoint) {
-        True -> do_disassemble(codepoint)
+        True -> parse_hangul_syllable(codepoint)
         False -> {
           case utils.is_hangul(codepoint) {
             True -> Error(IncompleteHangul)
@@ -88,7 +109,7 @@ pub fn disassemble_complete_character(
   }
 }
 
-fn do_disassemble(
+fn parse_hangul_syllable(
   codepoint_int: Int,
 ) -> Result(HangulSyllable, DisassembleError) {
   let base = codepoint_int - complete_hangul_start
