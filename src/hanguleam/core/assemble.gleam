@@ -23,9 +23,9 @@ pub type AssembleError {
 }
 
 pub fn combine_character(
-  choseong: String,
-  jungseong: String,
-  jongseong: String,
+  choseong choseong: String,
+  jungseong jungseong: String,
+  jongseong jongseong: String,
 ) -> Result(String, AssembleError) {
   case
     validate.can_be_choseong(choseong),
