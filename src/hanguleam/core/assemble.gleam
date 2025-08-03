@@ -27,6 +27,11 @@ pub fn combine_character(
   jungseong jungseong: String,
   jongseong jongseong: String,
 ) -> Result(String, AssembleError) {
+  let jungseong =
+    constants.assemble_vowel_string(jungseong) |> result.unwrap(jungseong)
+  let jongseong =
+    constants.assemble_consonant_string(jongseong) |> result.unwrap(jongseong)
+
   case
     validate.can_be_choseong(choseong),
     validate.can_be_jungseong(jungseong),

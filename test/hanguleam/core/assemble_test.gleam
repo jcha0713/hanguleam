@@ -85,4 +85,15 @@ pub fn combine_character_last_characters_test() {
 pub fn combine_character_complex_vowel_empty_jongseong_test() {
   assemble.combine_character("ㄱ", "ㅘ", "")
   |> should.equal(Ok("과"))
+
+  assemble.combine_character("ㄱ", "ㅗㅏ", "")
+  |> should.equal(Ok("과"))
+}
+
+pub fn combine_character_complex_test() {
+  assemble.combine_character("ㄱ", "ㅘ", "ㄼ")
+  |> should.equal(Ok("괇"))
+
+  assemble.combine_character("ㄱ", "ㅗㅏ", "ㄹㅂ")
+  |> should.equal(Ok("괇"))
 }
