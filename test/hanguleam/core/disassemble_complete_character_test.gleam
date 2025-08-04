@@ -37,7 +37,7 @@ pub fn disassemble_complete_character_without_jongseong_test() {
 pub fn disassemble_complete_character_complex_jongseong_test() {
   assert_disassemble_ok(
     "쀍",
-    HangulSyllable(Choseong("ㅃ"), Jungseong("ㅞ"), Jongseong("ㄹㄱ")),
+    HangulSyllable(Choseong("ㅃ"), Jungseong("ㅜㅔ"), Jongseong("ㄹㄱ")),
   )
 }
 
@@ -94,7 +94,7 @@ pub fn disassemble_complete_character_various_jungseong_test() {
 
   assert_disassemble_ok(
     "괘",
-    HangulSyllable(Choseong("ㄱ"), Jungseong("ㅙ"), Jongseong("")),
+    HangulSyllable(Choseong("ㄱ"), Jungseong("ㅗㅐ"), Jongseong("")),
   )
 }
 

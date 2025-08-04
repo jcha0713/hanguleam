@@ -60,7 +60,7 @@ fn disassemble_char_to_groups(char: String) -> List(String) {
 fn syllable_to_components(syllable: HangulSyllable) -> List(String) {
   let HangulSyllable(Choseong(cho), Jungseong(jung), Jongseong(jong)) = syllable
   [cho]
-  |> list.append(disassemble_jamo(jung))
+  |> list.append(string.to_graphemes(jung))
   |> fn(base) {
     case jong {
       "" -> base
@@ -74,8 +74,8 @@ fn disassemble_jamo(char: String) -> List(String) {
     use codepoint <- result.try(utils.get_codepoint_result_from_char(char))
 
     case utils.is_jungseong_range(codepoint) {
-      True -> constants.disassemble_vowel_string(char)
-      False -> constants.disassemble_consonant_string(char)
+      True -> Ok(constants.disassemble_vowel_string(char))
+      False -> Ok(constants.disassemble_consonant_string(char))
     }
   }
 
@@ -134,11 +134,12 @@ fn parse_hangul_syllable(
     |> result.map_error(fn(_) { NonHangul }),
   )
 
-  let disassembled_jongseong = disassemble_jamo(jongseong)
+  let jungseong = constants.disassemble_vowel_string(jungseong)
+  let jongseong = constants.disassemble_consonant_string(jongseong)
 
   Ok(HangulSyllable(
     Choseong(choseong),
     Jungseong(jungseong),
-    Jongseong(string.join(disassembled_jongseong, "")),
+    Jongseong(jongseong),
   ))
 }
