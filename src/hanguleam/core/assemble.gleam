@@ -8,12 +8,7 @@ import hanguleam/internal/constants.{
 import hanguleam/internal/utils
 
 pub fn combine_vowels(vowel1: String, vowel2: String) -> String {
-  let combination = vowel1 <> vowel2
-
-  case constants.assemble_vowel_string(combination) {
-    Ok(assembled) -> assembled
-    Error(_) -> combination
-  }
+  constants.assemble_vowel_string(vowel1 <> vowel2)
 }
 
 pub type AssembleError {
@@ -27,10 +22,8 @@ pub fn combine_character(
   jungseong jungseong: String,
   jongseong jongseong: String,
 ) -> Result(String, AssembleError) {
-  let jungseong =
-    constants.assemble_vowel_string(jungseong) |> result.unwrap(jungseong)
-  let jongseong =
-    constants.assemble_consonant_string(jongseong) |> result.unwrap(jongseong)
+  let jungseong = constants.assemble_vowel_string(jungseong)
+  let jongseong = constants.assemble_consonant_string(jongseong)
 
   case
     validate.can_be_choseong(choseong),

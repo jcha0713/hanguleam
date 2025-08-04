@@ -42,11 +42,8 @@ pub fn get_batchim(text: String) -> Result(BatchimInfo, BatchimError) {
         utils.get_value_by_index(batchim_index, jongseongs)
         |> result.map_error(fn(_) { InvalidCharacter(char) }),
       )
-      use components <- result.try(
-        constants.disassemble_consonant_string(batchim)
-        |> result.map(string.to_graphemes)
-        |> result.map_error(fn(_) { InvalidCharacter(char) }),
-      )
+      let components =
+        batchim |> constants.disassemble_consonant_string |> string.to_graphemes
       let batchim_type = get_batchim_type(components)
 
       Ok(types.BatchimInfo(
