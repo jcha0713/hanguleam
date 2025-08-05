@@ -98,7 +98,7 @@ pub fn main() {
   // Intelligently removes last Korean character component
   hanguleam.remove_last_character("안녕하세요 값") // "안녕하세요 갑"
   hanguleam.remove_last_character("전화") // "전호"
-  
+
   // Works with non-Korean characters too
   hanguleam.remove_last_character("Hello") // "Hell"
   hanguleam.remove_last_character("") // ""
@@ -140,51 +140,62 @@ gleam run   # Run the project
 
 ### Core Modules
 
-| Module | Function | Description |
-|--------|----------|-------------|
-| **choseong** | `get_choseong` | Extract initial consonants from Korean text |
-| **batchim** | `has_batchim` | Check if character has final consonant (simple version) |
-| **batchim** | `has_batchim_with_options` | Check if character has final consonant (with filtering options) |
-| **batchim** | `get_batchim` | Get detailed batchim information including type and components |
-| **disassemble** | `disassemble` | Break down Hangul characters into constituent jamo |
-| **disassemble** | `disassemble_to_groups` | Disassemble characters into grouped jamo arrays |
-| **disassemble** | `disassemble_complete_character` | Disassemble single complete Hangul with detailed structure |
-| **disassemble** | `remove_last_character` | Remove last character component (Korean-aware) |
-| **validate** | `can_be_choseong` | Check if character can be used as initial consonant |
-| **validate** | `can_be_jungseong` | Check if character can be used as medial vowel |
-| **validate** | `can_be_jongseong` | Check if character can be used as final consonant |
+| Module          | Function                         | Description                                                     |
+| --------------- | -------------------------------- | --------------------------------------------------------------- |
+| **choseong**    | `get_choseong`                   | Extract initial consonants from Korean text                     |
+| **batchim**     | `has_batchim`                    | Check if character has final consonant (simple version)         |
+| **batchim**     | `has_batchim_with_options`       | Check if character has final consonant (with filtering options) |
+| **batchim**     | `get_batchim`                    | Get detailed batchim information including type and components  |
+| **disassemble** | `disassemble`                    | Break down Hangul characters into constituent jamo              |
+| **disassemble** | `disassemble_to_groups`          | Disassemble characters into grouped jamo arrays                 |
+| **disassemble** | `disassemble_complete_character` | Disassemble single complete Hangul with detailed structure      |
+| **disassemble** | `remove_last_character`          | Remove last character component (Korean-aware)                  |
+| **validate**    | `can_be_choseong`                | Check if character can be used as initial consonant             |
+| **validate**    | `can_be_jungseong`               | Check if character can be used as medial vowel                  |
+| **validate**    | `can_be_jongseong`               | Check if character can be used as final consonant               |
 
 ### Function Details
 
 #### `get_choseong(text: String) -> String`
+
 Extracts initial consonants (choseong) from Korean Hangul characters, preserving whitespace and filtering out non-Korean characters.
 
 #### `has_batchim(text: String) -> Bool`
+
 Checks if the last character has a batchim (final consonant). Simple version that checks for any batchim type.
 
 #### `has_batchim_with_options(text: String, options: Option(HasBatchimOptions)) -> Bool`
+
 Checks if the last character has a batchim (final consonant). Advanced version with filtering by single or double batchim types.
 
 #### `get_batchim(text: String) -> Result(BatchimInfo, BatchimError)`
+
 Returns comprehensive batchim analysis including character, type classification, and component breakdown.
 
 #### `disassemble(text: String) -> String`
+
 Disassembles Korean Hangul characters into their constituent jamo. Complete syllables and individual jamo are broken down into basic components, while non-Korean characters are preserved.
 
 #### `disassemble_to_groups(text: String) -> List(List(String))`
+
 Disassembles Korean characters into groups of jamo components. Each character becomes a separate array of its constituent parts.
 
 #### `disassemble_complete_character(char: String) -> Result(HangulSyllable, DisassembleError)`
+
 Disassembles a single complete Hangul character into structured components (choseong, jungseong, jongseong). Only works with complete syllables in the 가-힣 range.
 
 #### `remove_last_character(text: String) -> String`
+
 Removes the last character component from a Korean string with intelligent Korean syllable decomposition. For complete Korean syllables, removes the last jamo component rather than the entire character. Works with mixed Korean/non-Korean content.
 
 #### `can_be_choseong(char: String) -> Bool`
+
 Checks if a given character can be used as a choseong (initial consonant) in Korean Hangul. Returns `True` for valid initial consonants like ㄱ, ㄴ, ㄷ, etc.
 
 #### `can_be_jungseong(char: String) -> Bool`
+
 Checks if a given character can be used as a jungseong (medial vowel) in Korean Hangul. Supports both single vowels (ㅏ, ㅓ, ㅗ, etc.) and complex vowels (ㅘ, ㅙ, ㅚ, etc.).
 
 #### `can_be_jongseong(char: String) -> Bool`
+
 Checks if a given character can be used as a jongseong (final consonant) in Korean Hangul. Supports single consonants, double consonants, and empty strings (no final consonant).
