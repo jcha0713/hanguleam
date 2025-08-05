@@ -89,6 +89,22 @@ pub fn main() {
 }
 ```
 
+### Remove last character (Korean-aware)
+
+```gleam
+import hanguleam
+
+pub fn main() {
+  // Intelligently removes last Korean character component
+  hanguleam.remove_last_character("안녕하세요 값") // "안녕하세요 갑"
+  hanguleam.remove_last_character("전화") // "전호"
+  
+  // Works with non-Korean characters too
+  hanguleam.remove_last_character("Hello") // "Hell"
+  hanguleam.remove_last_character("") // ""
+}
+```
+
 ### Validate Korean jamo components
 
 ```gleam
@@ -133,6 +149,7 @@ gleam run   # Run the project
 | **disassemble** | `disassemble` | Break down Hangul characters into constituent jamo |
 | **disassemble** | `disassemble_to_groups` | Disassemble characters into grouped jamo arrays |
 | **disassemble** | `disassemble_complete_character` | Disassemble single complete Hangul with detailed structure |
+| **disassemble** | `remove_last_character` | Remove last character component (Korean-aware) |
 | **validate** | `can_be_choseong` | Check if character can be used as initial consonant |
 | **validate** | `can_be_jungseong` | Check if character can be used as medial vowel |
 | **validate** | `can_be_jongseong` | Check if character can be used as final consonant |
@@ -159,6 +176,9 @@ Disassembles Korean characters into groups of jamo components. Each character be
 
 #### `disassemble_complete_character(char: String) -> Result(HangulSyllable, DisassembleError)`
 Disassembles a single complete Hangul character into structured components (choseong, jungseong, jongseong). Only works with complete syllables in the 가-힣 range.
+
+#### `remove_last_character(text: String) -> String`
+Removes the last character component from a Korean string with intelligent Korean syllable decomposition. For complete Korean syllables, removes the last jamo component rather than the entire character. Works with mixed Korean/non-Korean content.
 
 #### `can_be_choseong(char: String) -> Bool`
 Checks if a given character can be used as a choseong (initial consonant) in Korean Hangul. Returns `True` for valid initial consonants like ㄱ, ㄴ, ㄷ, etc.

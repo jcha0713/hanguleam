@@ -1,13 +1,15 @@
 import gleam/list
 import gleam/result
 import gleam/string
+import hanguleam/core/assemble
 
 import hanguleam/internal/constants.{
   choseongs, complete_hangul_start, jongseongs, jungseongs, number_of_jongseong,
   number_of_jungseong,
 }
 import hanguleam/internal/types.{
-  type HangulSyllable, Choseong, HangulSyllable, Jongseong, Jungseong,
+  type Choseong, type HangulSyllable, type Jongseong, type Jungseong, Choseong,
+  HangulSyllable, Jongseong, Jungseong,
 }
 import hanguleam/internal/utils
 
@@ -15,6 +17,23 @@ pub type DisassembleError {
   IncompleteHangul
   NonHangul
   EmptyInput
+}
+
+pub type DisassembledChar {
+  // Single jamo 'ㄱ'
+  Jamo(String)
+  // '가'
+  SimpleCV(Choseong, Jungseong)
+  // '과'
+  CompoundCV(Choseong, Jungseong)
+  // '각'
+  SimpleCVC(Choseong, Jungseong, Jongseong)
+  // '곽'
+  CompoundCVC(Choseong, Jungseong, Jongseong)
+  // '갂'
+  ComplexBatchim(Choseong, Jungseong, Jongseong)
+  // '곾'
+  CompoundComplexBatchim(Choseong, Jungseong, Jongseong)
 }
 
 pub fn disassemble(text: String) -> String {
@@ -142,4 +161,77 @@ fn parse_hangul_syllable(
     Jungseong(jungseong),
     Jongseong(jongseong),
   ))
+}
+
+pub fn remove_last_character(text: String) -> String {
+  case string.last(text) {
+    Error(_) -> text
+    Ok(last_char) -> remove_character_component(text, last_char)
+  }
+}
+
+fn remove_character_component(text: String, last_char: String) -> String {
+  let prefix = string.drop_end(text, 1)
+
+  last_char
+  |> disassemble_complete_character
+  |> result.map(syllable_to_disassembled_char)
+  |> result.map(reduce_syllable)
+  |> result.unwrap("")
+  |> string.append(prefix, _)
+}
+
+fn reduce_syllable(disassembled: DisassembledChar) -> String {
+  case disassembled {
+    SimpleCV(Choseong(cho), _) -> cho
+    CompoundCV(Choseong(cho), Jungseong(jung)) -> {
+      let assert Ok(assembled) =
+        assemble.combine_character(cho, string.slice(jung, 0, 1), "")
+      assembled
+    }
+    SimpleCVC(Choseong(cho), Jungseong(jung), Jongseong(_)) -> {
+      let assert Ok(assembled) = assemble.combine_character(cho, jung, "")
+      assembled
+    }
+    CompoundCVC(Choseong(cho), Jungseong(jung), Jongseong(_)) -> {
+      let assert Ok(assembled) = assemble.combine_character(cho, jung, "")
+      assembled
+    }
+    ComplexBatchim(Choseong(cho), Jungseong(jung), Jongseong(jong)) -> {
+      let assert Ok(assembled) =
+        assemble.combine_character(cho, jung, string.slice(jong, 0, 1))
+      assembled
+    }
+    CompoundComplexBatchim(Choseong(cho), Jungseong(jung), Jongseong(jong)) -> {
+      let assert Ok(assembled) =
+        assemble.combine_character(cho, jung, string.slice(jong, 0, 1))
+      assembled
+    }
+    Jamo(_) -> ""
+  }
+}
+
+fn syllable_to_disassembled_char(syllable: HangulSyllable) -> DisassembledChar {
+  let HangulSyllable(Choseong(cho), Jungseong(jung), Jongseong(jong)) = syllable
+
+  case jong, is_compound_vowel(jung), is_compound_consonant(jong) {
+    "", False, _ -> SimpleCV(Choseong(cho), Jungseong(jung))
+    "", True, _ -> CompoundCV(Choseong(cho), Jungseong(jung))
+    _, False, False ->
+      SimpleCVC(Choseong(cho), Jungseong(jung), Jongseong(jong))
+    _, True, False ->
+      CompoundCVC(Choseong(cho), Jungseong(jung), Jongseong(jong))
+    _, False, True ->
+      ComplexBatchim(Choseong(cho), Jungseong(jung), Jongseong(jong))
+    _, True, True ->
+      CompoundComplexBatchim(Choseong(cho), Jungseong(jung), Jongseong(jong))
+  }
+}
+
+fn is_compound_vowel(vowel: String) -> Bool {
+  string.length(vowel) > 1
+}
+
+fn is_compound_consonant(consonant: String) -> Bool {
+  string.length(consonant) > 1
 }
