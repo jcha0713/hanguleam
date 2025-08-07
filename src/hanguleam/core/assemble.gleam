@@ -17,6 +17,37 @@ pub type AssembleError {
   InvalidJongseong(String)
 }
 
+pub fn combine_character_unsafe(
+  cho: String,
+  jung: String,
+  jong: String,
+) -> String {
+  case combine_character(cho, jung, jong) {
+    Ok(combined) -> combined
+    Error(InvalidChoseong(invalid)) -> {
+      let msg =
+        "Internal error: invalid choseong '"
+        <> invalid
+        <> "' from validated syllable"
+      panic as msg
+    }
+    Error(InvalidJungseong(invalid)) -> {
+      let msg =
+        "Internal error: invalid jungseong '"
+        <> invalid
+        <> "' from validated syllable"
+      panic as msg
+    }
+    Error(InvalidJongseong(invalid)) -> {
+      let msg =
+        "Internal error: invalid jongseong '"
+        <> invalid
+        <> "' from validated syllable"
+      panic as msg
+    }
+  }
+}
+
 pub fn combine_character(
   choseong choseong: String,
   jungseong jungseong: String,

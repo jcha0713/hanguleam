@@ -185,27 +185,19 @@ fn reduce_syllable(disassembled: DisassembledChar) -> String {
   case disassembled {
     SimpleCV(Choseong(cho), _) -> cho
     CompoundCV(Choseong(cho), Jungseong(jung)) -> {
-      let assert Ok(assembled) =
-        assemble.combine_character(cho, string.slice(jung, 0, 1), "")
-      assembled
+      assemble.combine_character_unsafe(cho, string.slice(jung, 0, 1), "")
     }
     SimpleCVC(Choseong(cho), Jungseong(jung), Jongseong(_)) -> {
-      let assert Ok(assembled) = assemble.combine_character(cho, jung, "")
-      assembled
+      assemble.combine_character_unsafe(cho, jung, "")
     }
     CompoundCVC(Choseong(cho), Jungseong(jung), Jongseong(_)) -> {
-      let assert Ok(assembled) = assemble.combine_character(cho, jung, "")
-      assembled
+      assemble.combine_character_unsafe(cho, jung, "")
     }
     ComplexBatchim(Choseong(cho), Jungseong(jung), Jongseong(jong)) -> {
-      let assert Ok(assembled) =
-        assemble.combine_character(cho, jung, string.slice(jong, 0, 1))
-      assembled
+      assemble.combine_character_unsafe(cho, jung, string.slice(jong, 0, 1))
     }
     CompoundComplexBatchim(Choseong(cho), Jungseong(jung), Jongseong(jong)) -> {
-      let assert Ok(assembled) =
-        assemble.combine_character(cho, jung, string.slice(jong, 0, 1))
-      assembled
+      assemble.combine_character_unsafe(cho, jung, string.slice(jong, 0, 1))
     }
     Jamo(_) -> ""
   }
