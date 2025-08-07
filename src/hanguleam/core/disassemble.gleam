@@ -7,18 +7,15 @@ import hanguleam/internal/constants.{
   choseongs, complete_hangul_start, jongseongs, jungseongs, number_of_jongseong,
   number_of_jungseong,
 }
+import hanguleam/internal/errors.{
+  type DisassembleError, EmptyInput, IncompleteHangul, NonHangul,
+}
 import hanguleam/internal/types.{
   type HangulCharacter, type HangulSyllable, Choseong, ComplexBatchim,
   CompoundCV, CompoundCVC, CompoundComplexBatchim, HangulSyllable, Jamo,
   Jongseong, Jungseong, SimpleCV, SimpleCVC,
 }
 import hanguleam/internal/utils
-
-pub type DisassembleError {
-  IncompleteHangul
-  NonHangul
-  EmptyInput
-}
 
 pub fn disassemble(text: String) -> String {
   do_disassemble(text, "")
