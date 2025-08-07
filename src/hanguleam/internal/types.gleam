@@ -28,3 +28,20 @@ pub type Jongseong {
 pub type HangulSyllable {
   HangulSyllable(Choseong, Jungseong, Jongseong)
 }
+
+pub type HangulCharacter {
+  // Single jamo 'ㄱ'
+  Jamo(String)
+  // '가'
+  SimpleCV(Choseong, Jungseong)
+  // '과'
+  CompoundCV(Choseong, Jungseong)
+  // '각'
+  SimpleCVC(Choseong, Jungseong, Jongseong)
+  // '곽'
+  CompoundCVC(Choseong, Jungseong, Jongseong)
+  // '갂'
+  ComplexBatchim(Choseong, Jungseong, Jongseong)
+  // '곾'
+  CompoundComplexBatchim(Choseong, Jungseong, Jongseong)
+}

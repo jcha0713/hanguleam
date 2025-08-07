@@ -8,8 +8,9 @@ import hanguleam/internal/constants.{
   number_of_jungseong,
 }
 import hanguleam/internal/types.{
-  type Choseong, type HangulSyllable, type Jongseong, type Jungseong, Choseong,
-  HangulSyllable, Jongseong, Jungseong,
+  type HangulCharacter, type HangulSyllable, Choseong, ComplexBatchim,
+  CompoundCV, CompoundCVC, CompoundComplexBatchim, HangulSyllable, Jamo,
+  Jongseong, Jungseong, SimpleCV, SimpleCVC,
 }
 import hanguleam/internal/utils
 
@@ -17,23 +18,6 @@ pub type DisassembleError {
   IncompleteHangul
   NonHangul
   EmptyInput
-}
-
-pub type DisassembledChar {
-  // Single jamo 'ㄱ'
-  Jamo(String)
-  // '가'
-  SimpleCV(Choseong, Jungseong)
-  // '과'
-  CompoundCV(Choseong, Jungseong)
-  // '각'
-  SimpleCVC(Choseong, Jungseong, Jongseong)
-  // '곽'
-  CompoundCVC(Choseong, Jungseong, Jongseong)
-  // '갂'
-  ComplexBatchim(Choseong, Jungseong, Jongseong)
-  // '곾'
-  CompoundComplexBatchim(Choseong, Jungseong, Jongseong)
 }
 
 pub fn disassemble(text: String) -> String {
@@ -181,7 +165,7 @@ fn remove_character_component(text: String, last_char: String) -> String {
   |> string.append(prefix, _)
 }
 
-fn reduce_syllable(disassembled: DisassembledChar) -> String {
+fn reduce_syllable(disassembled: HangulCharacter) -> String {
   case disassembled {
     SimpleCV(Choseong(cho), _) -> cho
     CompoundCV(Choseong(cho), Jungseong(jung)) -> {
@@ -203,7 +187,7 @@ fn reduce_syllable(disassembled: DisassembledChar) -> String {
   }
 }
 
-fn syllable_to_disassembled_char(syllable: HangulSyllable) -> DisassembledChar {
+fn syllable_to_disassembled_char(syllable: HangulSyllable) -> HangulCharacter {
   let HangulSyllable(Choseong(cho), Jungseong(jung), Jongseong(jong)) = syllable
 
   case jong, is_compound_vowel(jung), is_compound_consonant(jong) {
