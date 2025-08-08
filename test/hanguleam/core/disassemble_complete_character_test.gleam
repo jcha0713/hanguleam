@@ -1,5 +1,7 @@
 import gleeunit/should
-import hanguleam/core/disassemble.{EmptyInput, IncompleteHangul, NonHangul}
+import hanguleam/core/disassemble.{
+  type DisassembleError, EmptyString, IncompleteHangul, NonHangulCharacter,
+}
 import hanguleam/internal/types.{
   type HangulSyllable, Choseong, HangulSyllable, Jongseong, Jungseong,
 }
@@ -10,10 +12,7 @@ fn assert_disassemble_ok(input: String, expected: HangulSyllable) {
   |> should.equal(Ok(expected))
 }
 
-fn assert_disassemble_error(
-  input: String,
-  expected_error: disassemble.DisassembleError,
-) {
+fn assert_disassemble_error(input: String, expected_error: DisassembleError) {
   disassemble.disassemble_complete_character(input)
   |> should.equal(Error(expected_error))
 }
@@ -119,7 +118,7 @@ pub fn disassemble_complete_character_complex_jongseong_cases_test() {
 // === ERROR CASES ===
 
 pub fn disassemble_complete_character_empty_string_test() {
-  assert_disassemble_error("", EmptyInput)
+  assert_disassemble_error("", EmptyString)
 }
 
 pub fn disassemble_complete_character_incomplete_hangul_test() {
@@ -131,10 +130,10 @@ pub fn disassemble_complete_character_incomplete_hangul_test() {
 
 pub fn disassemble_complete_character_non_hangul_test() {
   // Test non-Hangul characters
-  assert_disassemble_error("a", NonHangul)
-  assert_disassemble_error("1", NonHangul)
-  assert_disassemble_error("!", NonHangul)
-  assert_disassemble_error(" ", NonHangul)
-  assert_disassemble_error("中", NonHangul)
-  assert_disassemble_error("あ", NonHangul)
+  assert_disassemble_error("a", NonHangulCharacter)
+  assert_disassemble_error("1", NonHangulCharacter)
+  assert_disassemble_error("!", NonHangulCharacter)
+  assert_disassemble_error(" ", NonHangulCharacter)
+  assert_disassemble_error("中", NonHangulCharacter)
+  assert_disassemble_error("あ", NonHangulCharacter)
 }

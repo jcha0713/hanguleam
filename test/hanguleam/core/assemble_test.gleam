@@ -1,99 +1,43 @@
-import gleeunit/should
-import hanguleam/core/assemble
+// Main test file that imports all assemble module tests
+// Individual function tests are organized in separate files:
+//
+// - combine_vowels_test.gleam
+// - combine_character_test.gleam  
+// - combine_character_unsafe_test.gleam
+// - assemble_function_test.gleam
 
-pub fn combine_vowels_valid_combinations_test() {
-  assemble.combine_vowels("ㅗ", "ㅏ")
-  |> should.equal("ㅘ")
+import hanguleam/core/assemble_function_test
+import hanguleam/core/combine_character_test
+import hanguleam/core/combine_character_unsafe_test
+import hanguleam/core/combine_vowels_test
 
-  assemble.combine_vowels("ㅗ", "ㅐ")
-  |> should.equal("ㅙ")
+// Re-export tests for discovery by test runner
+pub const combine_vowels_valid_combinations_test = combine_vowels_test.valid_combinations_test
 
-  assemble.combine_vowels("ㅗ", "ㅣ")
-  |> should.equal("ㅚ")
+pub const combine_vowels_invalid_combinations_test = combine_vowels_test.invalid_combinations_test
 
-  assemble.combine_vowels("ㅜ", "ㅓ")
-  |> should.equal("ㅝ")
+pub const combine_vowels_single_vowels_test = combine_vowels_test.single_vowels_test
 
-  assemble.combine_vowels("ㅜ", "ㅔ")
-  |> should.equal("ㅞ")
+pub const combine_character_valid_test = combine_character_test.combine_character_valid_test
 
-  assemble.combine_vowels("ㅜ", "ㅣ")
-  |> should.equal("ㅟ")
+pub const combine_character_invalid_choseong_test = combine_character_test.combine_character_invalid_choseong_test
 
-  assemble.combine_vowels("ㅡ", "ㅣ")
-  |> should.equal("ㅢ")
-}
+pub const combine_character_invalid_jungseong_test = combine_character_test.combine_character_invalid_jungseong_test
 
-pub fn combine_vowels_invalid_combinations_test() {
-  assemble.combine_vowels("ㅗ", "ㅛ")
-  |> should.equal("ㅗㅛ")
+pub const combine_character_invalid_jongseong_test = combine_character_test.combine_character_invalid_jongseong_test
 
-  assemble.combine_vowels("ㅏ", "ㅓ")
-  |> should.equal("ㅏㅓ")
+pub const combine_character_first_characters_test = combine_character_test.combine_character_first_characters_test
 
-  assemble.combine_vowels("ㅣ", "ㅏ")
-  |> should.equal("ㅣㅏ")
+pub const combine_character_last_characters_test = combine_character_test.combine_character_last_characters_test
 
-  assemble.combine_vowels("ㅜ", "ㅏ")
-  |> should.equal("ㅜㅏ")
-}
+pub const combine_character_complex_vowel_empty_jongseong_test = combine_character_test.combine_character_complex_vowel_empty_jongseong_test
 
-pub fn combine_vowels_single_vowels_test() {
-  assemble.combine_vowels("ㅏ", "")
-  |> should.equal("ㅏ")
+pub const combine_character_complex_test = combine_character_test.combine_character_complex_test
 
-  assemble.combine_vowels("", "ㅓ")
-  |> should.equal("ㅓ")
+pub const combine_character_unsafe_valid_test = combine_character_unsafe_test.combine_character_unsafe_valid_test
 
-  assemble.combine_vowels("", "")
-  |> should.equal("")
-}
+pub const assemble_basic_test = assemble_function_test.assemble_basic_test
 
-pub fn combine_character_valid_test() {
-  assemble.combine_character("ㄱ", "ㅏ", "")
-  |> should.equal(Ok("가"))
+pub const assemble_single_character_test = assemble_function_test.assemble_single_character_test
 
-  assemble.combine_character("ㄴ", "ㅏ", "ㄴ")
-  |> should.equal(Ok("난"))
-}
-
-pub fn combine_character_invalid_choseong_test() {
-  assemble.combine_character("ㅏ", "ㅏ", "")
-  |> should.equal(Error(assemble.InvalidChoseong("ㅏ")))
-}
-
-pub fn combine_character_invalid_jungseong_test() {
-  assemble.combine_character("ㄱ", "ㄱ", "")
-  |> should.equal(Error(assemble.InvalidJungseong("ㄱ")))
-}
-
-pub fn combine_character_invalid_jongseong_test() {
-  assemble.combine_character("ㄱ", "ㅏ", "ㅏ")
-  |> should.equal(Error(assemble.InvalidJongseong("ㅏ")))
-}
-
-pub fn combine_character_first_characters_test() {
-  assemble.combine_character("ㄱ", "ㅏ", "ㄱ")
-  |> should.equal(Ok("각"))
-}
-
-pub fn combine_character_last_characters_test() {
-  assemble.combine_character("ㅎ", "ㅣ", "ㅎ")
-  |> should.equal(Ok("힣"))
-}
-
-pub fn combine_character_complex_vowel_empty_jongseong_test() {
-  assemble.combine_character("ㄱ", "ㅘ", "")
-  |> should.equal(Ok("과"))
-
-  assemble.combine_character("ㄱ", "ㅗㅏ", "")
-  |> should.equal(Ok("과"))
-}
-
-pub fn combine_character_complex_test() {
-  assemble.combine_character("ㄱ", "ㅘ", "ㄼ")
-  |> should.equal(Ok("괇"))
-
-  assemble.combine_character("ㄱ", "ㅗㅏ", "ㄹㅂ")
-  |> should.equal(Ok("괇"))
-}
+pub const assemble_empty_test = assemble_function_test.assemble_empty_test
