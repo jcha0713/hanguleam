@@ -30,8 +30,6 @@ pub type HangulSyllable {
 }
 
 pub type HangulCharacter {
-  // Single jamo 'ㄱ'
-  Jamo(String)
   // '가'
   SimpleCV(Choseong, Jungseong)
   // '과'
@@ -44,4 +42,16 @@ pub type HangulCharacter {
   ComplexBatchim(Choseong, Jungseong, Jongseong)
   // '곾'
   CompoundComplexBatchim(Choseong, Jungseong, Jongseong)
+}
+
+pub type Jamo {
+  Consonant(String)
+  Vowel(String)
+}
+
+pub type CharacterType {
+  NonHangul
+  Empty
+  CompleteHangul(syllable: HangulSyllable)
+  IncompleteHangul(char: Jamo)
 }
