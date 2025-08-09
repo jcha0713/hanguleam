@@ -1,3 +1,4 @@
+import hanguleam/core/assemble
 import hanguleam/core/batchim
 import hanguleam/core/choseong
 import hanguleam/core/disassemble
@@ -291,3 +292,50 @@ pub const can_be_jungseong = validate.can_be_jungseong
 /// ```
 ///
 pub const can_be_jongseong = validate.can_be_jongseong
+
+/// Combines two Korean vowels into a single complex vowel if possible.
+///
+/// ## Examples
+///
+/// ```gleam
+/// combine_vowels("ㅗ", "ㅏ")
+/// // -> "ㅘ"
+///
+/// combine_vowels("ㅣ", "ㅏ")
+/// // -> "ㅣㅏ" (no combination possible)
+/// ```
+///
+pub const combine_vowels = assemble.combine_vowels
+
+/// Combines Korean jamo components into a complete Hangul syllable.
+///
+/// ## Examples
+///
+/// ```gleam
+/// combine_character(choseong: "ㄱ", jungseong: "ㅏ", jongseong: "")
+/// // -> Ok("가")
+///
+/// combine_character(choseong: "ㄲ", jungseong: "ㅠ", jongseong: "ㅇ")
+/// // -> Ok("뀽")
+/// ```
+///
+pub const combine_character = assemble.combine_character
+
+/// Assembles Korean text fragments by intelligently combining characters.
+/// Processes fragments according to Korean linguistic rules including 
+/// consonant-vowel combinations and Korean linking (연음).
+///
+/// ## Examples
+///
+/// ```gleam
+/// assemble(["ㄱ", "ㅏ", "ㅂ"])
+/// // -> "갑"
+///
+/// assemble(["안녕하", "ㅅ", "ㅔ", "요"])
+/// // -> "안녕하세요"
+///
+/// assemble(["뀽", "ㅏ"])
+/// // -> "뀨아"
+/// ```
+///
+pub const assemble = assemble.assemble
