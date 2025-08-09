@@ -36,8 +36,82 @@ pub const combine_character_complex_test = combine_character_test.combine_charac
 
 pub const combine_character_unsafe_valid_test = combine_character_unsafe_test.combine_character_unsafe_valid_test
 
-pub const assemble_basic_test = assemble_function_test.assemble_basic_test
+// Assemble function tests - basic combinations
+pub const assemble_basic_cv_test = assemble_function_test.assemble_basic_cv_test
 
-pub const assemble_single_character_test = assemble_function_test.assemble_single_character_test
+pub const assemble_basic_cvc_test = assemble_function_test.assemble_basic_cvc_test
 
-pub const assemble_empty_test = assemble_function_test.assemble_empty_test
+pub const assemble_complex_vowel_test = assemble_function_test.assemble_complex_vowel_test
+
+pub const assemble_two_syllables_test = assemble_function_test.assemble_two_syllables_test
+
+pub const assemble_korean_word_test = assemble_function_test.assemble_korean_word_test
+
+// Vowel combination tests
+pub const assemble_vowel_combination_oa_test = assemble_function_test.assemble_vowel_combination_oa_test
+
+pub const assemble_vowel_combination_ue_test = assemble_function_test.assemble_vowel_combination_ue_test
+
+pub const assemble_vowel_combination_ui_test = assemble_function_test.assemble_vowel_combination_ui_test
+
+pub const assemble_invalid_vowel_combination_test = assemble_function_test.assemble_invalid_vowel_combination_test
+
+pub const assemble_invalid_vowel_combination_ia_test = assemble_function_test.assemble_invalid_vowel_combination_ia_test
+
+// Linking tests
+pub const assemble_linking_subok_a_test = assemble_function_test.assemble_linking_subok_a_test
+
+pub const assemble_linking_gab_u_test = assemble_function_test.assemble_linking_gab_u_test
+
+// Batchim tests
+pub const assemble_add_single_batchim_test = assemble_function_test.assemble_add_single_batchim_test
+
+pub const assemble_add_batchim_n_test = assemble_function_test.assemble_add_batchim_n_test
+
+pub const assemble_complex_batchim_lb_test = assemble_function_test.assemble_complex_batchim_lb_test
+
+pub const assemble_complex_batchim_ls_test = assemble_function_test.assemble_complex_batchim_ls_test
+
+pub const assemble_cannot_add_vowel_as_batchim_test = assemble_function_test.assemble_cannot_add_vowel_as_batchim_test
+
+// Sentence assembly tests
+pub const assemble_sentence_no_combination_test = assemble_function_test.assemble_sentence_no_combination_test
+
+pub const assemble_sentence_assembly_test = assemble_function_test.assemble_sentence_assembly_test
+
+pub const assemble_sentence_with_space_test = assemble_function_test.assemble_sentence_with_space_test
+
+pub const assemble_mixed_text_test = assemble_function_test.assemble_mixed_text_test
+
+pub const assemble_numbers_and_hangul_test = assemble_function_test.assemble_numbers_and_hangul_test
+
+// Edge case tests
+pub const assemble_empty_list_test = assemble_function_test.assemble_empty_list_test
+
+pub const assemble_single_empty_string_test = assemble_function_test.assemble_single_empty_string_test
+
+pub const assemble_multiple_empty_strings_test = assemble_function_test.assemble_multiple_empty_strings_test
+
+pub const assemble_single_consonant_test = assemble_function_test.assemble_single_consonant_test
+
+pub const assemble_single_vowel_test = assemble_function_test.assemble_single_vowel_test
+
+pub const assemble_single_complete_character_test = assemble_function_test.assemble_single_complete_character_test
+
+pub const assemble_space_character_test = assemble_function_test.assemble_space_character_test
+
+pub const assemble_special_char_hangul_test = assemble_function_test.assemble_special_char_hangul_test
+
+pub const assemble_vowel_consonant_no_combination_test = assemble_function_test.assemble_vowel_consonant_no_combination_test
+
+pub const assemble_consonant_consonant_no_combination_test = assemble_function_test.assemble_consonant_consonant_no_combination_test
+
+pub const assemble_long_sequence_test = assemble_function_test.assemble_long_sequence_test
+
+pub const assemble_repeated_consonant_test = assemble_function_test.assemble_repeated_consonant_test
+
+pub const assemble_repeated_vowel_test = assemble_function_test.assemble_repeated_vowel_test
+
+pub const assemble_complete_char_consonant_test = assemble_function_test.assemble_complete_char_consonant_test
+
+pub const assemble_complete_char_vowel_test = assemble_function_test.assemble_complete_char_vowel_test
