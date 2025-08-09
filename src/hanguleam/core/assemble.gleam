@@ -111,22 +111,17 @@ fn do_combine(choseong: String, jungseong: String, jongseong: String) -> String 
 }
 
 pub fn assemble(fragments: List(String)) -> String {
-  case fragments {
-    [] -> ""
-    [single] -> single
-    multiple ->
-      multiple
-      |> list.fold(#("", types.Empty), process_fragment)
-      |> pair.first
-  }
+  fragments
+  |> list.fold(#("", types.Empty), merge_fragments)
+  |> pair.first
 }
 
-fn process_fragment(
+fn merge_fragments(
   acc: #(String, types.CharacterType),
   fragment: String,
 ) -> #(String, types.CharacterType) {
   let #(accumulated, last_state) = acc
-  let next_char_type = get_first_char_type(fragment)
+  let next_char_type = get_char_type_at(fragment, string.first)
 
   case last_state, next_char_type {
     types.IncompleteHangul(last_jamo), types.IncompleteHangul(first_jamo) -> {
@@ -136,7 +131,7 @@ fn process_fragment(
         string.drop_end(accumulated, 1)
         <> combined
         <> string.drop_start(fragment, 1)
-      let new_state = get_last_char_type(new_text)
+      let new_state = get_char_type_at(new_text, string.last)
 
       #(new_text, new_state)
     }
@@ -144,12 +139,12 @@ fn process_fragment(
       let extended = try_extend_syllable(syllable, jamo)
 
       let new_text = string.drop_end(accumulated, 1) <> extended
-      let new_state = get_last_char_type(extended)
+      let new_state = get_char_type_at(extended, string.last)
       #(new_text, new_state)
     }
     _, _ -> {
       let new_text = accumulated <> fragment
-      let new_state = get_last_char_type(new_text)
+      let new_state = get_char_type_at(new_text, string.last)
       #(new_text, new_state)
     }
   }
@@ -161,147 +156,104 @@ fn try_extend_syllable(
 ) -> String {
   let parsed = character.parse_hangul_syllable(syllable)
 
-  case parsed, jamo {
-    types.SimpleCV(types.Choseong(cho), types.Jungseong(jung)),
-      types.Consonant(consonant)
-    -> {
-      case validate.can_be_jongseong(consonant) {
-        True -> combine_character_unsafe(cho, jung, consonant)
-        False -> combine_character_unsafe(cho, jung, "") <> consonant
-      }
-    }
-    types.SimpleCV(types.Choseong(cho), types.Jungseong(jung)),
-      types.Vowel(vowel)
-    -> {
-      let maybe_vowel = jung <> vowel
-      case validate.can_be_jungseong(maybe_vowel) {
-        True -> combine_character_unsafe(cho, maybe_vowel, "")
-        False -> combine_character_unsafe(cho, jung, "") <> vowel
-      }
-    }
-    types.CompoundCV(types.Choseong(cho), types.Jungseong(jung)),
-      types.Consonant(consonant)
-    -> {
-      case validate.can_be_jongseong(consonant) {
-        True -> combine_character_unsafe(cho, jung, consonant)
-        False -> combine_character_unsafe(cho, jung, "") <> consonant
-      }
-    }
-    types.CompoundCV(types.Choseong(cho), types.Jungseong(jung)),
-      types.Vowel(vowel)
-    -> {
-      let maybe_vowel = jung <> vowel
-      case validate.can_be_jungseong(maybe_vowel) {
-        True -> combine_character_unsafe(cho, maybe_vowel, "")
-        False -> combine_character_unsafe(cho, jung, "") <> maybe_vowel
-      }
-    }
+  case parsed {
+    // Syllables without batchim (CV patterns)
+    types.SimpleCV(types.Choseong(cho), types.Jungseong(jung)) ->
+      extend_syllable_without_batchim(cho, jung, jamo)
+    types.CompoundCV(types.Choseong(cho), types.Jungseong(jung)) ->
+      extend_syllable_without_batchim(cho, jung, jamo)
+
+    // Syllables with batchim (CVC patterns)
     types.SimpleCVC(
       types.Choseong(cho),
       types.Jungseong(jung),
       types.Jongseong(jong),
-    ),
-      types.Vowel(vowel)
-    -> {
-      case validate.can_be_choseong(jong) {
-        True ->
-          combine_character_unsafe(cho, jung, "")
-          <> combine_character_unsafe(jong, vowel, "")
-        False -> combine_character_unsafe(cho, jung, jong) <> vowel
-      }
-    }
+    ) -> extend_syllable_with_batchim(cho, jung, jong, jamo)
     types.CompoundCVC(
       types.Choseong(cho),
       types.Jungseong(jung),
       types.Jongseong(jong),
-    ),
-      types.Vowel(vowel)
-    -> {
-      case validate.can_be_choseong(jong) {
-        True ->
-          combine_character_unsafe(cho, jung, "")
-          <> combine_character_unsafe(jong, vowel, "")
-        False -> combine_character_unsafe(cho, jung, jong) <> vowel
-      }
-    }
-    types.SimpleCVC(
-      types.Choseong(cho),
-      types.Jungseong(jung),
-      types.Jongseong(jong),
-    ),
-      types.Consonant(consonant)
-    -> {
-      let maybe_complex_batchim = jong <> consonant
-      case validate.can_be_jongseong(maybe_complex_batchim) {
-        True -> combine_character_unsafe(cho, jung, maybe_complex_batchim)
-        False -> combine_character_unsafe(cho, jung, jong) <> consonant
-      }
-    }
-    types.CompoundCVC(
-      types.Choseong(cho),
-      types.Jungseong(jung),
-      types.Jongseong(jong),
-    ),
-      types.Consonant(consonant)
-    -> {
-      let maybe_complex_batchim = jong <> consonant
-      case validate.can_be_jongseong(maybe_complex_batchim) {
-        True -> combine_character_unsafe(cho, jung, maybe_complex_batchim)
-        False -> combine_character_unsafe(cho, jung, jong) <> consonant
-      }
-    }
+    ) -> extend_syllable_with_batchim(cho, jung, jong, jamo)
+
+    // Complex batchim cases
     types.ComplexBatchim(
       types.Choseong(cho),
       types.Jungseong(jung),
       types.Jongseong(jong),
-    ),
-      types.Vowel(vowel)
-    -> {
-      let first = string.slice(jong, 1, 1)
-      let last = string.slice(jong, 0, 1)
-      case validate.can_be_choseong(first) {
-        True ->
-          combine_character_unsafe(cho, jung, last)
-          <> combine_character_unsafe(first, vowel, "")
-        False -> combine_character_unsafe(cho, jung, jong) <> vowel
-      }
-    }
+    ) -> extend_complex_batchim_syllable(cho, jung, jong, jamo)
     types.CompoundComplexBatchim(
       types.Choseong(cho),
       types.Jungseong(jung),
       types.Jongseong(jong),
-    ),
-      types.Vowel(vowel)
-    -> {
+    ) -> extend_syllable_with_batchim(cho, jung, jong, jamo)
+  }
+}
+
+fn extend_syllable_without_batchim(
+  cho: String,
+  jung: String,
+  jamo: types.Jamo,
+) -> String {
+  case jamo {
+    types.Consonant(consonant) ->
+      case validate.can_be_jongseong(consonant) {
+        True -> combine_character_unsafe(cho, jung, consonant)
+        False -> combine_character_unsafe(cho, jung, "") <> consonant
+      }
+    types.Vowel(vowel) -> {
+      let extended_vowel = jung <> vowel
+      case validate.can_be_jungseong(extended_vowel) {
+        True -> combine_character_unsafe(cho, extended_vowel, "")
+        False -> combine_character_unsafe(cho, jung, "") <> vowel
+      }
+    }
+  }
+}
+
+fn extend_syllable_with_batchim(
+  cho: String,
+  jung: String,
+  jong: String,
+  jamo: types.Jamo,
+) -> String {
+  case jamo {
+    types.Vowel(vowel) ->
       case validate.can_be_choseong(jong) {
         True ->
           combine_character_unsafe(cho, jung, "")
           <> combine_character_unsafe(jong, vowel, "")
         False -> combine_character_unsafe(cho, jung, jong) <> vowel
       }
-    }
-    _, _ -> {
-      let syllable_str = syllable_to_string(syllable)
-      let jamo_str = jamo_to_string(jamo)
-      syllable_str <> jamo_str
+    types.Consonant(consonant) -> {
+      let complex_batchim = jong <> consonant
+      case validate.can_be_jongseong(complex_batchim) {
+        True -> combine_character_unsafe(cho, jung, complex_batchim)
+        False -> combine_character_unsafe(cho, jung, jong) <> consonant
+      }
     }
   }
 }
 
-fn jamo_to_string(jamo: types.Jamo) -> String {
+fn extend_complex_batchim_syllable(
+  cho: String,
+  jung: String,
+  jong: String,
+  jamo: types.Jamo,
+) -> String {
   case jamo {
-    types.Consonant(s) -> s
-    types.Vowel(s) -> s
+    types.Vowel(vowel) -> {
+      let leading_consonant = string.slice(jong, 0, 1)
+      let tailing_consonant = string.slice(jong, 1, 1)
+      case validate.can_be_choseong(tailing_consonant) {
+        True ->
+          combine_character_unsafe(cho, jung, leading_consonant)
+          <> combine_character_unsafe(tailing_consonant, vowel, "")
+        False -> combine_character_unsafe(cho, jung, jong) <> vowel
+      }
+    }
+    types.Consonant(consonant) ->
+      combine_character_unsafe(cho, jung, jong) <> consonant
   }
-}
-
-fn syllable_to_string(syllable: types.HangulSyllable) -> String {
-  let types.HangulSyllable(
-    types.Choseong(cho),
-    types.Jungseong(jung),
-    types.Jongseong(jong),
-  ) = syllable
-  combine_character_unsafe(cho, jung, jong)
 }
 
 fn try_combine_jamos(last: types.Jamo, first: types.Jamo) -> String {
@@ -324,16 +276,9 @@ fn try_combine_jamos(last: types.Jamo, first: types.Jamo) -> String {
   }
 }
 
-fn get_first_char_type(text: String) -> types.CharacterType {
-  case string.first(text) {
-    Ok(first_char) -> character.get_character_type(first_char)
-    Error(_) -> types.Empty
-  }
-}
-
-fn get_last_char_type(text: String) -> types.CharacterType {
-  case string.last(text) {
-    Ok(last_char) -> character.get_character_type(last_char)
-    Error(_) -> types.Empty
-  }
+fn get_char_type_at(text: String, position: fn(String) -> Result(String, Nil)) {
+  text
+  |> position
+  |> result.map(character.get_character_type)
+  |> result.unwrap(types.Empty)
 }
