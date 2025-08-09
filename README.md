@@ -105,6 +105,29 @@ pub fn main() {
 }
 ```
 
+### Assemble Korean text fragments
+
+```gleam
+import hanguleam
+
+pub fn main() {
+  // Combine consonant and vowel into syllable
+  hanguleam.assemble(["ㄱ", "ㅏ", "ㅂ"]) // "갑"
+
+  // Intelligent text assembly with Korean rules
+  hanguleam.assemble(["안녕하", "ㅅ", "ㅔ", "요"]) // "안녕하세요"
+
+  // Korean linking (연음) - consonant moves to next syllable
+  hanguleam.assemble(["뀽", "ㅏ"]) // "뀨아"
+
+  // Combine vowels into complex vowels
+  hanguleam.combine_vowels("ㅗ", "ㅏ") // "ㅘ"
+
+  // Build syllables from jamo components
+  hanguleam.combine_character(choseong: "ㄲ", jungseong: "ㅠ", jongseong: "ㅇ") // Ok("뀽")
+}
+```
+
 ### Validate Korean jamo components
 
 ```gleam
@@ -150,6 +173,9 @@ gleam run   # Run the project
 | **disassemble** | `disassemble_to_groups`          | Disassemble characters into grouped jamo arrays                 |
 | **disassemble** | `disassemble_complete_character` | Disassemble single complete Hangul with detailed structure      |
 | **disassemble** | `remove_last_character`          | Remove last character component (Korean-aware)                  |
+| **assemble**    | `assemble`                       | Assemble Korean text fragments with linguistic rules            |
+| **assemble**    | `combine_vowels`                 | Combine two vowels into complex vowel if possible               |
+| **assemble**    | `combine_character`              | Combine jamo components into complete Hangul syllable           |
 | **validate**    | `can_be_choseong`                | Check if character can be used as initial consonant             |
 | **validate**    | `can_be_jungseong`               | Check if character can be used as medial vowel                  |
 | **validate**    | `can_be_jongseong`               | Check if character can be used as final consonant               |
@@ -187,6 +213,18 @@ Disassembles a single complete Hangul character into structured components (chos
 #### `remove_last_character(text: String) -> String`
 
 Removes the last character component from a Korean string with intelligent Korean syllable decomposition. For complete Korean syllables, removes the last jamo component rather than the entire character. Works with mixed Korean/non-Korean content.
+
+#### `assemble(fragments: List(String)) -> String`
+
+Assembles Korean text fragments by intelligently combining characters according to Korean linguistic rules. Handles consonant-vowel combinations, vowel combinations, batchim addition, and Korean linking (연음).
+
+#### `combine_vowels(vowel1: String, vowel2: String) -> String`
+
+Combines two Korean vowels into a single complex vowel if linguistically valid. Returns the combined result or concatenated string if no combination is possible.
+
+#### `combine_character(choseong: String, jungseong: String, jongseong: String) -> Result(String, AssembleError)`
+
+Combines individual Korean jamo components (choseong, jungseong, jongseong) into a complete Hangul syllable. Returns a Result with the combined character or an error for invalid components.
 
 #### `can_be_choseong(char: String) -> Bool`
 
