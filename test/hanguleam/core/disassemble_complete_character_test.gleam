@@ -1,4 +1,4 @@
-import gleeunit/should
+import startest/expect
 import hanguleam/core/disassemble.{
   type DisassembleError, EmptyString, IncompleteHangul, NonHangulCharacter,
 }
@@ -9,12 +9,12 @@ import hanguleam/internal/types.{
 // Helper function to reduce repetition
 fn assert_disassemble_ok(input: String, expected: HangulSyllable) {
   disassemble.disassemble_complete_character(input)
-  |> should.equal(Ok(expected))
+  |> expect.to_equal(Ok(expected))
 }
 
 fn assert_disassemble_error(input: String, expected_error: DisassembleError) {
   disassemble.disassemble_complete_character(input)
-  |> should.equal(Error(expected_error))
+  |> expect.to_equal(Error(expected_error))
 }
 
 // === SUCCESS CASES ===

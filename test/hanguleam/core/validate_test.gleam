@@ -1,35 +1,35 @@
-import gleeunit/should
+import startest/expect
 import hanguleam/core/validate
 
 pub fn validate_choseong_test() {
-  validate.can_be_choseong("ㄱ") |> should.equal(True)
-  validate.can_be_choseong("ㅃ") |> should.equal(True)
+  validate.can_be_choseong("ㄱ") |> expect.to_equal(True)
+  validate.can_be_choseong("ㅃ") |> expect.to_equal(True)
 
-  validate.can_be_choseong("ㄱㅅ") |> should.equal(False)
-  validate.can_be_choseong("ㅏ") |> should.equal(False)
-  validate.can_be_choseong("가") |> should.equal(False)
-  validate.can_be_choseong("ㄱa") |> should.equal(False)
+  validate.can_be_choseong("ㄱㅅ") |> expect.to_equal(False)
+  validate.can_be_choseong("ㅏ") |> expect.to_equal(False)
+  validate.can_be_choseong("가") |> expect.to_equal(False)
+  validate.can_be_choseong("ㄱa") |> expect.to_equal(False)
 }
 
 pub fn validate_jungseong_test() {
-  validate.can_be_jungseong("ㅏ") |> should.equal(True)
-  validate.can_be_jungseong("ㅗㅏ") |> should.equal(True)
-  validate.can_be_jungseong("ㅘ") |> should.equal(True)
+  validate.can_be_jungseong("ㅏ") |> expect.to_equal(True)
+  validate.can_be_jungseong("ㅗㅏ") |> expect.to_equal(True)
+  validate.can_be_jungseong("ㅘ") |> expect.to_equal(True)
 
-  validate.can_be_jungseong("ㅏㅗ") |> should.equal(False)
-  validate.can_be_jungseong("ㄱ") |> should.equal(False)
-  validate.can_be_jungseong("ㄱㅅ") |> should.equal(False)
-  validate.can_be_jungseong("가") |> should.equal(False)
+  validate.can_be_jungseong("ㅏㅗ") |> expect.to_equal(False)
+  validate.can_be_jungseong("ㄱ") |> expect.to_equal(False)
+  validate.can_be_jungseong("ㄱㅅ") |> expect.to_equal(False)
+  validate.can_be_jungseong("가") |> expect.to_equal(False)
 }
 
 pub fn validate_jongseong_test() {
-  validate.can_be_jongseong("ㄱ") |> should.equal(True)
-  validate.can_be_jongseong("ㄱㅅ") |> should.equal(True)
-  validate.can_be_jongseong("ㄳ") |> should.equal(True)
-  validate.can_be_jongseong("ㄹㅎ") |> should.equal(True)
+  validate.can_be_jongseong("ㄱ") |> expect.to_equal(True)
+  validate.can_be_jongseong("ㄱㅅ") |> expect.to_equal(True)
+  validate.can_be_jongseong("ㄳ") |> expect.to_equal(True)
+  validate.can_be_jongseong("ㄹㅎ") |> expect.to_equal(True)
 
-  validate.can_be_jongseong("ㅎㄹ") |> should.equal(False)
-  validate.can_be_jongseong("가") |> should.equal(False)
-  validate.can_be_jongseong("ㅏ") |> should.equal(False)
-  validate.can_be_jongseong("ㅗㅏ") |> should.equal(False)
+  validate.can_be_jongseong("ㅎㄹ") |> expect.to_equal(False)
+  validate.can_be_jongseong("가") |> expect.to_equal(False)
+  validate.can_be_jongseong("ㅏ") |> expect.to_equal(False)
+  validate.can_be_jongseong("ㅗㅏ") |> expect.to_equal(False)
 }
