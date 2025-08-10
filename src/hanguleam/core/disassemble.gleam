@@ -8,7 +8,6 @@ import hanguleam/internal/types.{
   CompoundCV, CompoundCVC, CompoundComplexBatchim, Consonant, HangulSyllable,
   Jongseong, Jungseong, SimpleCV, SimpleCVC, Vowel,
 }
-import hanguleam/internal/utils
 
 pub type DisassembleError {
   IncompleteHangul
