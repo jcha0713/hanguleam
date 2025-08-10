@@ -1,352 +1,260 @@
+import startest.{describe, it}
 import gleam/list
 import gleam/string
 import startest/expect
 import hanguleam/core/disassemble
 
-// === BASIC FUNCTIONALITY TESTS ===
-
-pub fn disassemble_simple_characters_test() {
-  // Test simple characters without compound jamo
-  let result = disassemble.disassemble("사과")
-  result |> expect.to_equal("ㅅㅏㄱㅗㅏ")
-}
-
-pub fn disassemble_single_character_test() {
-  // Test single complete character
-  let result = disassemble.disassemble("가")
-  result |> expect.to_equal("ㄱㅏ")
-}
-
-pub fn disassemble_character_with_jongseong_test() {
-  // Test character with simple jongseong
-  let result = disassemble.disassemble("간")
-  result |> expect.to_equal("ㄱㅏㄴ")
-}
-
-pub fn disassemble_complex_jongseong_test() {
-  // Test character with complex jongseong that decomposes
-  let result = disassemble.disassemble("값")
-  result |> expect.to_equal("ㄱㅏㅂㅅ")
-}
-
-// === STANDALONE JAMO TESTS (Critical for catching choseong bug) ===
-
-pub fn disassemble_standalone_choseong_basic_test() {
-  // Test basic choseong characters
-  let result = disassemble.disassemble("ㄱㄴㄷㄸ")
-  result |> expect.to_equal("ㄱㄴㄷㄸ")
-}
-
-pub fn disassemble_standalone_choseong_all_test() {
-  // Test all choseong characters
-  let result = disassemble.disassemble("ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ")
-  result |> expect.to_equal("ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ")
-}
-
-pub fn disassemble_standalone_jungseong_basic_test() {
-  // Test basic jungseong characters
-  let result = disassemble.disassemble("ㅏㅓㅗㅜ")
-  result |> expect.to_equal("ㅏㅓㅗㅜ")
-}
-
-pub fn disassemble_standalone_jungseong_all_test() {
-  // Test all jungseong characters
-  let result = disassemble.disassemble("ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ")
-  result |> expect.to_equal("ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅗㅏㅗㅐㅗㅣㅛㅜㅜㅓㅜㅔㅜㅣㅠㅡㅡㅣㅣ")
-}
-
-pub fn disassemble_standalone_jongseong_basic_test() {
-  // Test basic jongseong characters (excluding empty)
-  let result = disassemble.disassemble("ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎ")
-  result |> expect.to_equal("ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎ")
-}
-
-pub fn disassemble_standalone_jongseong_complex_test() {
-  // Test complex jongseong that should decompose
-  let result = disassemble.disassemble("ㄳㄵㄶㄺㄻㄼㄽㄾㄿㅀㅄ")
-  result |> expect.to_equal("ㄱㅅㄴㅈㄴㅎㄹㄱㄹㅁㄹㅂㄹㅅㄹㅌㄹㅍㄹㅎㅂㅅ")
-}
-
-// === MIXED JAMO TESTS ===
-
-pub fn disassemble_mixed_all_jamo_types_test() {
-  // Test mixing choseong, jungseong, and jongseong
-  let result = disassemble.disassemble("ㄱㅏㄴㅗㅘㄵ")
-  result |> expect.to_equal("ㄱㅏㄴㅗㅗㅏㄴㅈ")
-}
-
-pub fn disassemble_mixed_complete_and_jamo_test() {
-  // Test complete characters mixed with individual jamo
-  let result = disassemble.disassemble("가ㄱㅏㄴ간")
-  result |> expect.to_equal("ㄱㅏㄱㅏㄴㄱㅏㄴ")
-}
-
-// === COMPOUND VOWEL TESTS ===
-
-pub fn disassemble_compound_vowel_wa_test() {
-  // Test compound vowel ㅘ → ㅗㅏ
-  let result = disassemble.disassemble("과")
-  result |> expect.to_equal("ㄱㅗㅏ")
-}
-
-pub fn disassemble_compound_vowel_wae_test() {
-  // Test compound vowel ㅙ → ㅗㅐ
-  let result = disassemble.disassemble("괘")
-  result |> expect.to_equal("ㄱㅗㅐ")
-}
-
-pub fn disassemble_compound_vowel_oe_test() {
-  // Test compound vowel ㅚ → ㅗㅣ
-  let result = disassemble.disassemble("괴")
-  result |> expect.to_equal("ㄱㅗㅣ")
-}
-
-pub fn disassemble_compound_vowel_wo_test() {
-  // Test compound vowel ㅝ → ㅜㅓ
-  let result = disassemble.disassemble("궈")
-  result |> expect.to_equal("ㄱㅜㅓ")
-}
-
-pub fn disassemble_compound_vowel_we_test() {
-  // Test compound vowel ㅞ → ㅜㅔ
-  let result = disassemble.disassemble("궤")
-  result |> expect.to_equal("ㄱㅜㅔ")
-}
-
-pub fn disassemble_compound_vowel_wi_test() {
-  // Test compound vowel ㅟ → ㅜㅣ
-  let result = disassemble.disassemble("귀")
-  result |> expect.to_equal("ㄱㅜㅣ")
-}
-
-pub fn disassemble_compound_vowel_ui_test() {
-  // Test compound vowel ㅢ → ㅡㅣ
-  let result = disassemble.disassemble("긔")
-  result |> expect.to_equal("ㄱㅡㅣ")
-}
-
-// === COMPLEX JONGSEONG TESTS ===
-
-pub fn disassemble_jongseong_gs_test() {
-  // Test ㄳ → ㄱㅅ
-  let result = disassemble.disassemble("몫")
-  result |> expect.to_equal("ㅁㅗㄱㅅ")
-}
-
-pub fn disassemble_jongseong_nj_test() {
-  // Test ㄵ → ㄴㅈ
-  let result = disassemble.disassemble("앉")
-  result |> expect.to_equal("ㅇㅏㄴㅈ")
-}
-
-pub fn disassemble_jongseong_nh_test() {
-  // Test ㄶ → ㄴㅎ
-  let result = disassemble.disassemble("많")
-  result |> expect.to_equal("ㅁㅏㄴㅎ")
-}
-
-pub fn disassemble_jongseong_lg_test() {
-  // Test ㄺ → ㄹㄱ
-  let result = disassemble.disassemble("닭")
-  result |> expect.to_equal("ㄷㅏㄹㄱ")
-}
-
-pub fn disassemble_jongseong_lm_test() {
-  // Test ㄻ → ㄹㅁ
-  let result = disassemble.disassemble("삶")
-  result |> expect.to_equal("ㅅㅏㄹㅁ")
-}
-
-pub fn disassemble_jongseong_lb_test() {
-  // Test ㄼ → ㄹㅂ
-  let result = disassemble.disassemble("넓")
-  result |> expect.to_equal("ㄴㅓㄹㅂ")
-}
-
-pub fn disassemble_jongseong_ls_test() {
-  // Test ㄽ → ㄹㅅ
-  let result = disassemble.disassemble("외곬")
-  result |> expect.to_equal("ㅇㅗㅣㄱㅗㄹㅅ")
-}
-
-pub fn disassemble_jongseong_lt_test() {
-  // Test ㄾ → ㄹㅌ
-  let result = disassemble.disassemble("핥")
-  result |> expect.to_equal("ㅎㅏㄹㅌ")
-}
-
-pub fn disassemble_jongseong_lp_test() {
-  // Test ㄿ → ㄹㅍ
-  let result = disassemble.disassemble("읊")
-  result |> expect.to_equal("ㅇㅡㄹㅍ")
-}
-
-pub fn disassemble_jongseong_lh_test() {
-  // Test ㅀ → ㄹㅎ
-  let result = disassemble.disassemble("싫")
-  result |> expect.to_equal("ㅅㅣㄹㅎ")
-}
-
-pub fn disassemble_jongseong_bs_test() {
-  // Test ㅄ → ㅂㅅ
-  let result = disassemble.disassemble("없")
-  result |> expect.to_equal("ㅇㅓㅂㅅ")
-}
-
-// === MIXED CONTENT TESTS ===
-
-pub fn disassemble_mixed_hangul_and_non_hangul_test() {
-  // Test mixed Hangul and non-Hangul characters
-  let result = disassemble.disassemble("안녕a세계!")
-  result |> expect.to_equal("ㅇㅏㄴㄴㅕㅇaㅅㅔㄱㅖ!")
-}
-
-pub fn disassemble_only_non_hangul_test() {
-  // Test string with only non-Hangul characters
-  let result = disassemble.disassemble("Hello123!")
-  result |> expect.to_equal("Hello123!")
-}
-
-pub fn disassemble_mixed_with_spaces_test() {
-  // Test mixed content with spaces
-  let result = disassemble.disassemble("한글 Korean 123")
-  result |> expect.to_equal("ㅎㅏㄴㄱㅡㄹ Korean 123")
-}
-
-pub fn disassemble_mixed_with_punctuation_test() {
-  // Test mixed content with punctuation
-  let result = disassemble.disassemble("안녕하세요, 세계!")
-  result |> expect.to_equal("ㅇㅏㄴㄴㅕㅇㅎㅏㅅㅔㅇㅛ, ㅅㅔㄱㅖ!")
-}
-
-// === EDGE CASES ===
-
-pub fn disassemble_empty_string_test() {
-  // Test empty string
-  let result = disassemble.disassemble("")
-  result |> expect.to_equal("")
-}
-
-pub fn disassemble_single_space_test() {
-  // Test single space
-  let result = disassemble.disassemble(" ")
-  result |> expect.to_equal(" ")
-}
-
-pub fn disassemble_multiple_spaces_test() {
-  // Test multiple spaces
-  let result = disassemble.disassemble("   ")
-  result |> expect.to_equal("   ")
-}
-
-pub fn disassemble_newline_test() {
-  // Test newline character
-  let result = disassemble.disassemble("\n")
-  result |> expect.to_equal("\n")
-}
-
-pub fn disassemble_tab_test() {
-  // Test tab character
-  let result = disassemble.disassemble("\t")
-  result |> expect.to_equal("\t")
-}
-
-// === UNICODE EDGE CASES ===
-
-pub fn disassemble_unicode_emoji_test() {
-  // Test Unicode emoji mixed with Hangul
-  let result = disassemble.disassemble("안녕😊세계")
-  result |> expect.to_equal("ㅇㅏㄴㄴㅕㅇ😊ㅅㅔㄱㅖ")
-}
-
-pub fn disassemble_unicode_symbols_test() {
-  // Test Unicode symbols
-  let result = disassemble.disassemble("한글★♥♦")
-  result |> expect.to_equal("ㅎㅏㄴㄱㅡㄹ★♥♦")
-}
-
-// === REAL WORLD EXAMPLES ===
-
-pub fn disassemble_korean_word_test() {
-  // Test common Korean word
-  let result = disassemble.disassemble("한글")
-  result |> expect.to_equal("ㅎㅏㄴㄱㅡㄹ")
-}
-
-pub fn disassemble_korean_sentence_test() {
-  // Test Korean sentence with spaces
-  let result = disassemble.disassemble("안녕 세계")
-  result |> expect.to_equal("ㅇㅏㄴㄴㅕㅇ ㅅㅔㄱㅖ")
-}
-
-pub fn disassemble_complex_korean_word_test() {
-  // Test word with multiple complex components
-  let result = disassemble.disassemble("굽었던")
-  result |> expect.to_equal("ㄱㅜㅂㅇㅓㅆㄷㅓㄴ")
-}
-
-pub fn disassemble_korean_name_test() {
-  // Test Korean name
-  let result = disassemble.disassemble("김철수")
-  result |> expect.to_equal("ㄱㅣㅁㅊㅓㄹㅅㅜ")
-}
-
-// === COMPREHENSIVE TESTS ===
-
-pub fn disassemble_all_compound_vowels_test() {
-  // Test all compound vowels in one string
-  let result = disassemble.disassemble("과괘괴궈궤귀긔")
-  result |> expect.to_equal("ㄱㅗㅏㄱㅗㅐㄱㅗㅣㄱㅜㅓㄱㅜㅔㄱㅜㅣㄱㅡㅣ")
-}
-
-pub fn disassemble_all_complex_jongseong_test() {
-  // Test multiple complex jongseong
-  let result = disassemble.disassemble("몫앉많닭")
-  result |> expect.to_equal("ㅁㅗㄱㅅㅇㅏㄴㅈㅁㅏㄴㅎㄷㅏㄹㄱ")
-}
-
-// === STRESS TESTS ===
-
-pub fn disassemble_long_text_test() {
-  // Test longer text with various components
-  let result = disassemble.disassemble("대한민국의 아름다운 한글은 세종대왕이 만드셨습니다")
-  result
-  |> expect.to_equal(
-    "ㄷㅐㅎㅏㄴㅁㅣㄴㄱㅜㄱㅇㅡㅣ ㅇㅏㄹㅡㅁㄷㅏㅇㅜㄴ ㅎㅏㄴㄱㅡㄹㅇㅡㄴ ㅅㅔㅈㅗㅇㄷㅐㅇㅗㅏㅇㅇㅣ ㅁㅏㄴㄷㅡㅅㅕㅆㅅㅡㅂㄴㅣㄷㅏ",
-  )
-}
-
-pub fn disassemble_repeated_characters_test() {
-  // Test repeated characters
-  let result = disassemble.disassemble("가가가나나나")
-  result |> expect.to_equal("ㄱㅏㄱㅏㄱㅏㄴㅏㄴㅏㄴㅏ")
-}
-
-// === BOUNDARY TESTS ===
-
-pub fn disassemble_hangul_boundary_start_test() {
-  // Test first complete Hangul character (가)
-  let result = disassemble.disassemble("가")
-  result |> expect.to_equal("ㄱㅏ")
-}
-
-pub fn disassemble_hangul_boundary_end_test() {
-  // Test last complete Hangul character (힣)
-  let result = disassemble.disassemble("힣")
-  result |> expect.to_equal("ㅎㅣㅎ")
-}
-
-// === INTEGRATION TEST ===
-
-pub fn disassemble_integration_test() {
-  // Test that disassemble and disassemble_to_groups are consistent
-  let text = "값진 한글"
-  let disassemble_result = disassemble.disassemble(text)
-  let groups_result =
-    disassemble.disassemble_to_groups(text)
-    |> list.flatten
-    |> string.join("")
-
-  disassemble_result |> expect.to_equal(groups_result)
-  disassemble_result |> expect.to_equal("ㄱㅏㅂㅅㅈㅣㄴ ㅎㅏㄴㄱㅡㄹ")
+pub fn disassemble_tests() {
+  describe("disassemble module", [
+    describe("basic functionality", [
+      it("should disassemble simple characters", fn() {
+        let result = disassemble.disassemble("사과")
+        result |> expect.to_equal("ㅅㅏㄱㅗㅏ")
+      }),
+      it("should disassemble single character", fn() {
+        let result = disassemble.disassemble("가")
+        result |> expect.to_equal("ㄱㅏ")
+      }),
+      it("should disassemble character with jongseong", fn() {
+        let result = disassemble.disassemble("간")
+        result |> expect.to_equal("ㄱㅏㄴ")
+      }),
+      it("should disassemble complex jongseong", fn() {
+        let result = disassemble.disassemble("값")
+        result |> expect.to_equal("ㄱㅏㅂㅅ")
+      }),
+    ]),
+    describe("standalone jamo", [
+      describe("choseong", [
+        it("should handle basic choseong characters", fn() {
+          let result = disassemble.disassemble("ㄱㄴㄷㄸ")
+          result |> expect.to_equal("ㄱㄴㄷㄸ")
+        }),
+        it("should handle all choseong characters", fn() {
+          let result = disassemble.disassemble("ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ")
+          result |> expect.to_equal("ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ")
+        }),
+      ]),
+      describe("jungseong", [
+        it("should handle basic jungseong characters", fn() {
+          let result = disassemble.disassemble("ㅏㅓㅗㅜ")
+          result |> expect.to_equal("ㅏㅓㅗㅜ")
+        }),
+        it("should handle all jungseong characters", fn() {
+          let result = disassemble.disassemble("ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ")
+          result |> expect.to_equal("ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅗㅏㅗㅐㅗㅣㅛㅜㅜㅓㅜㅔㅜㅣㅠㅡㅡㅣㅣ")
+        }),
+      ]),
+      describe("jongseong", [
+        it("should handle basic jongseong characters", fn() {
+          let result = disassemble.disassemble("ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎ")
+          result |> expect.to_equal("ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎ")
+        }),
+        it("should handle complex jongseong that decompose", fn() {
+          let result = disassemble.disassemble("ㄳㄵㄶㄺㄻㄼㄽㄾㄿㅀㅄ")
+          result |> expect.to_equal("ㄱㅅㄴㅈㄴㅎㄹㄱㄹㅁㄹㅂㄹㅅㄹㅌㄹㅍㄹㅎㅂㅅ")
+        }),
+      ]),
+    ]),
+    describe("mixed jamo", [
+      it("should handle mixed all jamo types", fn() {
+        let result = disassemble.disassemble("ㄱㅏㄴㅗㅘㄵ")
+        result |> expect.to_equal("ㄱㅏㄴㅗㅗㅏㄴㅈ")
+      }),
+      it("should handle complete characters mixed with individual jamo", fn() {
+        let result = disassemble.disassemble("가ㄱㅏㄴ간")
+        result |> expect.to_equal("ㄱㅏㄱㅏㄴㄱㅏㄴ")
+      }),
+    ]),
+    describe("compound vowels", [
+      it("should decompose ㅘ → ㅗㅏ", fn() {
+        let result = disassemble.disassemble("과")
+        result |> expect.to_equal("ㄱㅗㅏ")
+      }),
+      it("should decompose ㅙ → ㅗㅐ", fn() {
+        let result = disassemble.disassemble("괘")
+        result |> expect.to_equal("ㄱㅗㅐ")
+      }),
+      it("should decompose ㅚ → ㅗㅣ", fn() {
+        let result = disassemble.disassemble("괴")
+        result |> expect.to_equal("ㄱㅗㅣ")
+      }),
+      it("should decompose ㅝ → ㅜㅓ", fn() {
+        let result = disassemble.disassemble("궈")
+        result |> expect.to_equal("ㄱㅜㅓ")
+      }),
+      it("should decompose ㅞ → ㅜㅔ", fn() {
+        let result = disassemble.disassemble("궤")
+        result |> expect.to_equal("ㄱㅜㅔ")
+      }),
+      it("should decompose ㅟ → ㅜㅣ", fn() {
+        let result = disassemble.disassemble("귀")
+        result |> expect.to_equal("ㄱㅜㅣ")
+      }),
+      it("should decompose ㅢ → ㅡㅣ", fn() {
+        let result = disassemble.disassemble("긔")
+        result |> expect.to_equal("ㄱㅡㅣ")
+      }),
+    ]),
+    describe("complex jongseong", [
+      it("should decompose ㄳ → ㄱㅅ", fn() {
+        let result = disassemble.disassemble("몫")
+        result |> expect.to_equal("ㅁㅗㄱㅅ")
+      }),
+      it("should decompose ㄵ → ㄴㅈ", fn() {
+        let result = disassemble.disassemble("앉")
+        result |> expect.to_equal("ㅇㅏㄴㅈ")
+      }),
+      it("should decompose ㄶ → ㄴㅎ", fn() {
+        let result = disassemble.disassemble("많")
+        result |> expect.to_equal("ㅁㅏㄴㅎ")
+      }),
+      it("should decompose ㄺ → ㄹㄱ", fn() {
+        let result = disassemble.disassemble("닭")
+        result |> expect.to_equal("ㄷㅏㄹㄱ")
+      }),
+      it("should decompose ㄻ → ㄹㅁ", fn() {
+        let result = disassemble.disassemble("삶")
+        result |> expect.to_equal("ㅅㅏㄹㅁ")
+      }),
+      it("should decompose ㄼ → ㄹㅂ", fn() {
+        let result = disassemble.disassemble("넓")
+        result |> expect.to_equal("ㄴㅓㄹㅂ")
+      }),
+      it("should decompose ㄽ → ㄹㅅ", fn() {
+        let result = disassemble.disassemble("외곬")
+        result |> expect.to_equal("ㅇㅗㅣㄱㅗㄹㅅ")
+      }),
+      it("should decompose ㄾ → ㄹㅌ", fn() {
+        let result = disassemble.disassemble("핥")
+        result |> expect.to_equal("ㅎㅏㄹㅌ")
+      }),
+      it("should decompose ㄿ → ㄹㅍ", fn() {
+        let result = disassemble.disassemble("읊")
+        result |> expect.to_equal("ㅇㅡㄹㅍ")
+      }),
+      it("should decompose ㅀ → ㄹㅎ", fn() {
+        let result = disassemble.disassemble("싫")
+        result |> expect.to_equal("ㅅㅣㄹㅎ")
+      }),
+      it("should decompose ㅄ → ㅂㅅ", fn() {
+        let result = disassemble.disassemble("없")
+        result |> expect.to_equal("ㅇㅓㅂㅅ")
+      }),
+    ]),
+    describe("mixed content", [
+      it("should handle mixed hangul and non-hangul", fn() {
+        let result = disassemble.disassemble("안녕a세계!")
+        result |> expect.to_equal("ㅇㅏㄴㄴㅕㅇaㅅㅔㄱㅖ!")
+      }),
+      it("should handle only non-hangul", fn() {
+        let result = disassemble.disassemble("Hello123!")
+        result |> expect.to_equal("Hello123!")
+      }),
+      it("should handle mixed content with spaces", fn() {
+        let result = disassemble.disassemble("한글 Korean 123")
+        result |> expect.to_equal("ㅎㅏㄴㄱㅡㄹ Korean 123")
+      }),
+      it("should handle mixed content with punctuation", fn() {
+        let result = disassemble.disassemble("안녕하세요, 세계!")
+        result |> expect.to_equal("ㅇㅏㄴㄴㅕㅇㅎㅏㅅㅔㅇㅛ, ㅅㅔㄱㅖ!")
+      }),
+    ]),
+    describe("edge cases", [
+      it("should handle empty string", fn() {
+        let result = disassemble.disassemble("")
+        result |> expect.to_equal("")
+      }),
+      it("should handle single space", fn() {
+        let result = disassemble.disassemble(" ")
+        result |> expect.to_equal(" ")
+      }),
+      it("should handle multiple spaces", fn() {
+        let result = disassemble.disassemble("   ")
+        result |> expect.to_equal("   ")
+      }),
+      it("should handle newline", fn() {
+        let result = disassemble.disassemble("\n")
+        result |> expect.to_equal("\n")
+      }),
+      it("should handle tab", fn() {
+        let result = disassemble.disassemble("\t")
+        result |> expect.to_equal("\t")
+      }),
+    ]),
+    describe("unicode edge cases", [
+      it("should handle unicode emoji", fn() {
+        let result = disassemble.disassemble("안녕😊세계")
+        result |> expect.to_equal("ㅇㅏㄴㄴㅕㅇ😊ㅅㅔㄱㅖ")
+      }),
+      it("should handle unicode symbols", fn() {
+        let result = disassemble.disassemble("한글★♥♦")
+        result |> expect.to_equal("ㅎㅏㄴㄱㅡㄹ★♥♦")
+      }),
+    ]),
+    describe("real world examples", [
+      it("should handle korean word", fn() {
+        let result = disassemble.disassemble("한글")
+        result |> expect.to_equal("ㅎㅏㄴㄱㅡㄹ")
+      }),
+      it("should handle korean sentence", fn() {
+        let result = disassemble.disassemble("안녕 세계")
+        result |> expect.to_equal("ㅇㅏㄴㄴㅕㅇ ㅅㅔㄱㅖ")
+      }),
+      it("should handle complex korean word", fn() {
+        let result = disassemble.disassemble("굽었던")
+        result |> expect.to_equal("ㄱㅜㅂㅇㅓㅆㄷㅓㄴ")
+      }),
+      it("should handle korean name", fn() {
+        let result = disassemble.disassemble("김철수")
+        result |> expect.to_equal("ㄱㅣㅁㅊㅓㄹㅅㅜ")
+      }),
+    ]),
+    describe("comprehensive tests", [
+      it("should handle all compound vowels", fn() {
+        let result = disassemble.disassemble("과괘괴궈궤귀긔")
+        result |> expect.to_equal("ㄱㅗㅏㄱㅗㅐㄱㅗㅣㄱㅜㅓㄱㅜㅔㄱㅜㅣㄱㅡㅣ")
+      }),
+      it("should handle multiple complex jongseong", fn() {
+        let result = disassemble.disassemble("몫앉많닭")
+        result |> expect.to_equal("ㅁㅗㄱㅅㅇㅏㄴㅈㅁㅏㄴㅎㄷㅏㄹㄱ")
+      }),
+    ]),
+    describe("stress tests", [
+      it("should handle long text", fn() {
+        let result = disassemble.disassemble("대한민국의 아름다운 한글은 세종대왕이 만드셨습니다")
+        result
+        |> expect.to_equal(
+          "ㄷㅐㅎㅏㄴㅁㅣㄴㄱㅜㄱㅇㅡㅣ ㅇㅏㄹㅡㅁㄷㅏㅇㅜㄴ ㅎㅏㄴㄱㅡㄹㅇㅡㄴ ㅅㅔㅈㅗㅇㄷㅐㅇㅗㅏㅇㅇㅣ ㅁㅏㄴㄷㅡㅅㅕㅆㅅㅡㅂㄴㅣㄷㅏ",
+        )
+      }),
+      it("should handle repeated characters", fn() {
+        let result = disassemble.disassemble("가가가나나나")
+        result |> expect.to_equal("ㄱㅏㄱㅏㄱㅏㄴㅏㄴㅏㄴㅏ")
+      }),
+    ]),
+    describe("boundary tests", [
+      it("should handle first complete hangul character", fn() {
+        let result = disassemble.disassemble("가")
+        result |> expect.to_equal("ㄱㅏ")
+      }),
+      it("should handle last complete hangul character", fn() {
+        let result = disassemble.disassemble("힣")
+        result |> expect.to_equal("ㅎㅣㅎ")
+      }),
+    ]),
+    describe("integration test", [
+      it("should be consistent with disassemble_to_groups", fn() {
+        let text = "값진 한글"
+        let disassemble_result = disassemble.disassemble(text)
+        let groups_result =
+          disassemble.disassemble_to_groups(text)
+          |> list.flatten
+          |> string.join("")
+
+        disassemble_result |> expect.to_equal(groups_result)
+        disassemble_result |> expect.to_equal("ㄱㅏㅂㅅㅈㅣㄴ ㅎㅏㄴㄱㅡㄹ")
+      }),
+    ]),
+  ])
 }
