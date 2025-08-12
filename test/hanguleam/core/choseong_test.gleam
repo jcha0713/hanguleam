@@ -1,6 +1,6 @@
+import hanguleam/extractor
 import startest.{describe, it}
 import startest/expect
-import hanguleam/extractor
 
 pub fn choseong_tests() {
   describe("choseong module", [

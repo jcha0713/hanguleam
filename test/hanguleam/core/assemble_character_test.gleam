@@ -1,6 +1,6 @@
+import hanguleam/composer
 import startest.{describe, it}
 import startest/expect
-import hanguleam/composer
 
 pub fn assemble_character_tests() {
   describe("assemble character functions", [

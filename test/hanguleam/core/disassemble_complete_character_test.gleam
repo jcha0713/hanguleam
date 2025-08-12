@@ -1,8 +1,8 @@
-import hanguleam/parser.{
-  type DisassembleError, EmptyString, IncompleteHangul, NonHangulCharacter,
-}
 import hanguleam/internal/types.{
   type HangulSyllable, Choseong, HangulSyllable, Jongseong, Jungseong,
+}
+import hanguleam/parser.{
+  type DisassembleError, EmptyString, IncompleteHangul, NonHangulCharacter,
 }
 import startest.{describe, it}
 import startest/expect

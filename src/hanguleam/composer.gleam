@@ -5,11 +5,11 @@ import gleam/string
 import hanguleam/internal/character
 import hanguleam/internal/types
 
-import hanguleam/validator
 import hanguleam/internal/constants.{
   complete_hangul_start, number_of_jongseong, number_of_jungseong,
 }
 import hanguleam/internal/utils
+import hanguleam/validator
 
 /// Combines two Korean vowels into a single complex vowel if possible.
 ///

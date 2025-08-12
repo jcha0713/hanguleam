@@ -2,8 +2,8 @@ import gleam/list
 import gleam/string
 import hanguleam/internal/character
 import hanguleam/internal/types.{
-  type HangulSyllable, Choseong, Consonant, HangulSyllable, Jongseong,
-  Jungseong, Vowel,
+  type HangulSyllable, Choseong, Consonant, HangulSyllable, Jongseong, Jungseong,
+  Vowel,
 }
 
 pub type DisassembleError {
@@ -155,4 +155,3 @@ pub fn disassemble_complete_character(
     types.CompleteHangul(char) -> Ok(char)
   }
 }
-
