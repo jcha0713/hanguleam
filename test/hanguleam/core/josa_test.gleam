@@ -107,5 +107,8 @@ pub fn josa_tests() {
       "달" |> i_ga_selector |> expect.to_equal(Ok("이"))
       "달" |> another_i_ga_selector |> expect.to_equal(Ok("이"))
     }),
+    it("should throw an Error for non matching josa", fn() {
+      josa.josa("하니", "달") |> expect.to_equal(Error(josa.NoMatchingJosa))
+    }),
   ])
 }
