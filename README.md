@@ -3,7 +3,7 @@
 [![Package Version](https://img.shields.io/hexpm/v/hanguleam)](https://hex.pm/packages/hanguleam)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/hanguleam/)
 
-A Gleam port of [es-hangul](https://github.com/toss/es-hangul) for handling Korean Hangul characters.
+This is a Gleam library for Korean text processing, providing comprehensive tools for handling Hangul characters. It's Gleam rewrite of [es-hangul](https://github.com/toss/es-hangul).
 
 ## Installation
 
@@ -16,46 +16,45 @@ gleam add hanguleam
 ### Extract initial consonants (choseong)
 
 ```gleam
-import hanguleam
+import hanguleam/extractor
 
 pub fn main() {
   // Basic usage
-  hanguleam.get_choseong("사과") // "ㅅㄱ"
+  extractor.get_choseong("사과") // "ㅅㄱ"
 
   // Handles spaces and whitespace
-  hanguleam.get_choseong("안녕 하세요") // "ㅇㄴ ㅎㅅㅇ"
+  extractor.get_choseong("안녕 하세요") // "ㅇㄴ ㅎㅅㅇ"
 
   // Filters out non-Korean characters
-  hanguleam.get_choseong("hello 안녕") // "ㅇㄴ"
+  extractor.get_choseong("hello 안녕") // "ㅇㄴ"
 }
 ```
 
 ### Check for batchim (final consonants)
 
 ```gleam
-import hanguleam
-import hanguleam/core/batchim.{HasBatchimOptions, SingleOnly, DoubleOnly}
+import hanguleam/batchim.{HasBatchimOptions, SingleOnly, DoubleOnly}
 import gleam/option.{None, Some}
 
 pub fn main() {
   // Simple check for any batchim
-  hanguleam.has_batchim("값") // True
-  hanguleam.has_batchim("토") // False
+  batchim.has_batchim("값") // True
+  batchim.has_batchim("토") // False
 
   // Advanced filtering by batchim type
-  hanguleam.has_batchim_with_options("갑", Some(HasBatchimOptions(only: Some(SingleOnly)))) // True
-  hanguleam.has_batchim_with_options("값", Some(HasBatchimOptions(only: Some(DoubleOnly)))) // True
+  batchim.has_batchim_with_options("갑", Some(HasBatchimOptions(only: Some(SingleOnly)))) // True
+  batchim.has_batchim_with_options("값", Some(HasBatchimOptions(only: Some(DoubleOnly)))) // True
 }
 ```
 
 ### Get detailed batchim information
 
 ```gleam
-import hanguleam
+import hanguleam/batchim
 
 pub fn main() {
   // Get comprehensive batchim analysis
-  case hanguleam.get_batchim("값") {
+  case batchim.get_batchim("값") {
     Ok(info) -> {
       // info.character: "값"
       // info.batchim_type: Double
@@ -69,18 +68,18 @@ pub fn main() {
 ### Disassemble Korean characters
 
 ```gleam
-import hanguleam
+import hanguleam/parser
 
 pub fn main() {
   // Disassemble into flat string
-  hanguleam.disassemble("값") // "ㄱㅏㅂㅅ"
-  hanguleam.disassemble("값이 비싸다") // "ㄱㅏㅂㅅㅇㅣ ㅂㅣㅆㅏㄷㅏ"
+  parser.disassemble("값") // "ㄱㅏㅂㅅ"
+  parser.disassemble("값이 비싸다") // "ㄱㅏㅂㅅㅇㅣ ㅂㅣㅆㅏㄷㅏ"
 
   // Disassemble into character groups
-  hanguleam.disassemble_to_groups("사과") // [["ㅅ", "ㅏ"], ["ㄱ", "ㅗ", "ㅏ"]]
+  parser.disassemble_to_groups("사과") // [["ㅅ", "ㅏ"], ["ㄱ", "ㅗ", "ㅏ"]]
 
   // Disassemble single complete character with detailed info
-  case hanguleam.disassemble_complete_character("값") {
+  case parser.disassemble_complete_character("값") {
     Ok(syllable) -> {
       // syllable contains Choseong("ㄱ"), Jungseong("ㅏ"), Jongseong("ㅂㅅ")
     }
@@ -92,63 +91,85 @@ pub fn main() {
 ### Remove last character (Korean-aware)
 
 ```gleam
-import hanguleam
+import hanguleam/editor
 
 pub fn main() {
   // Intelligently removes last Korean character component
-  hanguleam.remove_last_character("안녕하세요 값") // "안녕하세요 갑"
-  hanguleam.remove_last_character("전화") // "전호"
+  editor.remove_last_character("안녕하세요 값") // "안녕하세요 갑"
+  editor.remove_last_character("전화") // "전호"
 
   // Works with non-Korean characters too
-  hanguleam.remove_last_character("Hello") // "Hell"
-  hanguleam.remove_last_character("") // ""
+  editor.remove_last_character("Hello") // "Hell"
+  editor.remove_last_character("") // ""
 }
 ```
 
 ### Assemble Korean text fragments
 
 ```gleam
-import hanguleam
+import hanguleam/composer
 
 pub fn main() {
   // Combine consonant and vowel into syllable
-  hanguleam.assemble(["ㄱ", "ㅏ", "ㅂ"]) // "갑"
+  composer.assemble(["ㄱ", "ㅏ", "ㅂ"]) // "갑"
 
   // Intelligent text assembly with Korean rules
-  hanguleam.assemble(["안녕하", "ㅅ", "ㅔ", "요"]) // "안녕하세요"
+  composer.assemble(["안녕하", "ㅅ", "ㅔ", "요"]) // "안녕하세요"
 
   // Korean linking (연음) - consonant moves to next syllable
-  hanguleam.assemble(["뀽", "ㅏ"]) // "뀨아"
+  composer.assemble(["뀽", "ㅏ"]) // "뀨아"
 
   // Combine vowels into complex vowels
-  hanguleam.combine_vowels("ㅗ", "ㅏ") // "ㅘ"
+  composer.combine_vowels("ㅗ", "ㅏ") // "ㅘ"
 
   // Build syllables from jamo components
-  hanguleam.combine_character(choseong: "ㄲ", jungseong: "ㅠ", jongseong: "ㅇ") // Ok("뀽")
+  composer.combine_character(choseong: "ㄲ", jungseong: "ㅠ", jongseong: "ㅇ") // Ok("뀽")
 }
 ```
 
 ### Validate Korean jamo components
 
 ```gleam
-import hanguleam
+import hanguleam/validator
 
 pub fn main() {
   // Check if character can be initial consonant (choseong)
-  hanguleam.can_be_choseong("ㄱ") // True
-  hanguleam.can_be_choseong("ㅏ") // False (vowel)
-  hanguleam.can_be_choseong("가") // False (complete syllable)
+  validator.can_be_choseong("ㄱ") // True
+  validator.can_be_choseong("ㅏ") // False (vowel)
+  validator.can_be_choseong("가") // False (complete syllable)
 
   // Check if character can be medial vowel (jungseong)
-  hanguleam.can_be_jungseong("ㅏ") // True
-  hanguleam.can_be_jungseong("ㅗㅏ") // True (complex vowel ㅘ)
-  hanguleam.can_be_jungseong("ㄱ") // False (consonant)
+  validator.can_be_jungseong("ㅏ") // True
+  validator.can_be_jungseong("ㅗㅏ") // True (complex vowel ㅘ)
+  validator.can_be_jungseong("ㄱ") // False (consonant)
 
   // Check if character can be final consonant (jongseong)
-  hanguleam.can_be_jongseong("ㄱ") // True
-  hanguleam.can_be_jongseong("ㄱㅅ") // True (double consonant ㄳ)
-  hanguleam.can_be_jongseong("") // True (no final consonant)
-  hanguleam.can_be_jongseong("ㅏ") // False (vowel)
+  validator.can_be_jongseong("ㄱ") // True
+  validator.can_be_jongseong("ㄱㅅ") // True (double consonant ㄳ)
+  validator.can_be_jongseong("") // True (no final consonant)
+  validator.can_be_jongseong("ㅏ") // False (vowel)
+}
+```
+
+### Handle Korean particles (josa)
+
+```gleam
+import hanguleam/josa
+
+pub fn main() {
+  // Select appropriate particle for a word
+  josa.pick("하니", "이") // Ok("가")
+  josa.pick("달", "이") // Ok("이")
+  josa.pick("집", "으로") // Ok("으로")
+  josa.pick("학교", "으로") // Ok("로")
+
+  // Use pre-built selector functions
+  josa.i_ga("하니") // Ok("가")
+  josa.eul_reul("달") // Ok("을")
+
+  // Create custom selectors
+  let euro_ro_selector = josa.make_josa_selector("으로")
+  "집" |> euro_ro_selector // Ok("으로")
 }
 ```
 
@@ -159,81 +180,16 @@ gleam test  # Run the tests
 gleam run   # Run the project
 ```
 
-## Available Functions
+## Available Modules
 
-### Core Modules
+| Module                | Description                                     |
+| --------------------- | ----------------------------------------------- |
+| `hanguleam/extractor` | Extract choseong (initial consonants) from text |
+| `hanguleam/batchim`   | Analyze batchim (final consonants)              |
+| `hanguleam/parser`    | Disassemble Hangul characters into jamo         |
+| `hanguleam/composer`  | Assemble jamo into Hangul characters            |
+| `hanguleam/editor`    | Edit Korean text with intelligent decomposition |
+| `hanguleam/validator` | Validate jamo components                        |
+| `hanguleam/josa`      | Handle Korean particles/postpositions           |
 
-| Module          | Function                         | Description                                                     |
-| --------------- | -------------------------------- | --------------------------------------------------------------- |
-| **choseong**    | `get_choseong`                   | Extract initial consonants from Korean text                     |
-| **batchim**     | `has_batchim`                    | Check if character has final consonant (simple version)         |
-| **batchim**     | `has_batchim_with_options`       | Check if character has final consonant (with filtering options) |
-| **batchim**     | `get_batchim`                    | Get detailed batchim information including type and components  |
-| **disassemble** | `disassemble`                    | Break down Hangul characters into constituent jamo              |
-| **disassemble** | `disassemble_to_groups`          | Disassemble characters into grouped jamo arrays                 |
-| **disassemble** | `disassemble_complete_character` | Disassemble single complete Hangul with detailed structure      |
-| **disassemble** | `remove_last_character`          | Remove last character component (Korean-aware)                  |
-| **assemble**    | `assemble`                       | Assemble Korean text fragments with linguistic rules            |
-| **assemble**    | `combine_vowels`                 | Combine two vowels into complex vowel if possible               |
-| **assemble**    | `combine_character`              | Combine jamo components into complete Hangul syllable           |
-| **validate**    | `can_be_choseong`                | Check if character can be used as initial consonant             |
-| **validate**    | `can_be_jungseong`               | Check if character can be used as medial vowel                  |
-| **validate**    | `can_be_jongseong`               | Check if character can be used as final consonant               |
-
-### Function Details
-
-#### `get_choseong(text: String) -> String`
-
-Extracts initial consonants (choseong) from Korean Hangul characters, preserving whitespace and filtering out non-Korean characters.
-
-#### `has_batchim(text: String) -> Bool`
-
-Checks if the last character has a batchim (final consonant). Simple version that checks for any batchim type.
-
-#### `has_batchim_with_options(text: String, options: Option(HasBatchimOptions)) -> Bool`
-
-Checks if the last character has a batchim (final consonant). Advanced version with filtering by single or double batchim types.
-
-#### `get_batchim(text: String) -> Result(BatchimInfo, BatchimError)`
-
-Returns comprehensive batchim analysis including character, type classification, and component breakdown.
-
-#### `disassemble(text: String) -> String`
-
-Disassembles Korean Hangul characters into their constituent jamo. Complete syllables and individual jamo are broken down into basic components, while non-Korean characters are preserved.
-
-#### `disassemble_to_groups(text: String) -> List(List(String))`
-
-Disassembles Korean characters into groups of jamo components. Each character becomes a separate array of its constituent parts.
-
-#### `disassemble_complete_character(char: String) -> Result(HangulSyllable, DisassembleError)`
-
-Disassembles a single complete Hangul character into structured components (choseong, jungseong, jongseong). Only works with complete syllables in the 가-힣 range.
-
-#### `remove_last_character(text: String) -> String`
-
-Removes the last character component from a Korean string with intelligent Korean syllable decomposition. For complete Korean syllables, removes the last jamo component rather than the entire character. Works with mixed Korean/non-Korean content.
-
-#### `assemble(fragments: List(String)) -> String`
-
-Assembles Korean text fragments by intelligently combining characters according to Korean linguistic rules. Handles consonant-vowel combinations, vowel combinations, batchim addition, and Korean linking (연음).
-
-#### `combine_vowels(vowel1: String, vowel2: String) -> String`
-
-Combines two Korean vowels into a single complex vowel if linguistically valid. Returns the combined result or concatenated string if no combination is possible.
-
-#### `combine_character(choseong: String, jungseong: String, jongseong: String) -> Result(String, AssembleError)`
-
-Combines individual Korean jamo components (choseong, jungseong, jongseong) into a complete Hangul syllable. Returns a Result with the combined character or an error for invalid components.
-
-#### `can_be_choseong(char: String) -> Bool`
-
-Checks if a given character can be used as a choseong (initial consonant) in Korean Hangul. Returns `True` for valid initial consonants like ㄱ, ㄴ, ㄷ, etc.
-
-#### `can_be_jungseong(char: String) -> Bool`
-
-Checks if a given character can be used as a jungseong (medial vowel) in Korean Hangul. Supports both single vowels (ㅏ, ㅓ, ㅗ, etc.) and complex vowels (ㅘ, ㅙ, ㅚ, etc.).
-
-#### `can_be_jongseong(char: String) -> Bool`
-
-Checks if a given character can be used as a jongseong (final consonant) in Korean Hangul. Supports single consonants, double consonants, and empty strings (no final consonant).
+Each module contains comprehensive documentation with examples. Import the specific modules you need to access their functions with full documentation.
