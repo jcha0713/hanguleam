@@ -3,7 +3,7 @@ import startest.{describe, it}
 import startest/expect
 
 pub fn disassemble_to_groups_tests() {
-  describe("disassemble_to_groups module", [
+  describe("disassemble_to_groups function", [
     describe("basic functionality", [
       it("should handle simple characters", fn() {
         let result = parser.disassemble_to_groups("사과")

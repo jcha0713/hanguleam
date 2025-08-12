@@ -5,7 +5,7 @@ import startest.{describe, it}
 import startest/expect
 
 pub fn disassemble_tests() {
-  describe("disassemble module", [
+  describe("disassemble function", [
     describe("basic functionality", [
       it("should disassemble simple characters", fn() {
         let result = parser.disassemble("사과")
