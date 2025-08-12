@@ -2,7 +2,7 @@ import gleam/list
 import gleam/string
 import glychee/benchmark
 import glychee/configuration
-import hanguleam/core/choseong
+import hanguleam/core/extractor
 
 pub fn main() {
   configuration.initialize()
@@ -14,12 +14,12 @@ pub fn main() {
     [
       benchmark.Function(
         label: "get_choseong (to_graphemes)",
-        callable: fn(test_data) { fn() { choseong.get_choseong(test_data) } },
+        callable: fn(test_data) { fn() { extractor.get_choseong(test_data) } },
       ),
       // benchmark.Function(
     //   label: "get_choseong_recurse (pop_grapheme)",
     //   callable: fn(test_data) {
-    //     fn() { choseong.get_choseong_recurse(test_data) }
+    //     fn() { extractor.get_choseong_recurse(test_data) }
     //   },
     // ),
     ],

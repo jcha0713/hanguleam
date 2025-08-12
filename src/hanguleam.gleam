@@ -1,8 +1,9 @@
-import hanguleam/core/assemble
+import hanguleam/core/composer
 import hanguleam/core/batchim
-import hanguleam/core/choseong
-import hanguleam/core/disassemble
-import hanguleam/core/validate
+import hanguleam/core/extractor
+import hanguleam/core/parser
+import hanguleam/core/validator
+import hanguleam/core/editor
 
 /// Extracts the initial consonants (choseong) from Korean Hangul characters in a string.
 /// Non-Korean characters are filtered out, while whitespace characters (spaces, tabs, newlines)
@@ -21,7 +22,7 @@ import hanguleam/core/validate
 /// // -> "ㅇㄴ"
 /// ```
 ///
-pub const get_choseong = choseong.get_choseong
+pub const get_choseong = extractor.get_choseong
 
 /// Checks if the last character of a Korean string has a batchim (final consonant).
 /// Returns `False` for empty strings, non-Korean characters, or incomplete Hangul.
@@ -128,7 +129,7 @@ pub const get_batchim = batchim.get_batchim
 /// // -> "hello ㅇㅏㄴㄴㅕㅇ"
 /// ```
 ///
-pub const disassemble = disassemble.disassemble
+pub const disassemble = parser.disassemble
 
 /// Disassembles Korean Hangul characters into groups of jamo components.
 /// Unlike `disassemble`, this function returns a 2D array where each character
@@ -150,7 +151,7 @@ pub const disassemble = disassemble.disassemble
 /// // -> [["h"], ["e"], ["l"], ["l"], ["o"]]
 /// ```
 ///
-pub const disassemble_to_groups = disassemble.disassemble_to_groups
+pub const disassemble_to_groups = parser.disassemble_to_groups
 
 /// Disassembles a single complete Korean Hangul character into its constituent parts.
 /// This function only works with complete Hangul syllables (가-힣 range) and returns
@@ -185,7 +186,7 @@ pub const disassemble_to_groups = disassemble.disassemble_to_groups
 /// // -> Error(EmptyInput)
 /// ```
 ///
-pub const disassemble_complete_character = disassemble.disassemble_complete_character
+pub const disassemble_complete_character = parser.disassemble_complete_character
 
 /// Removes the last character component from a Korean string, intelligently handling Korean syllable decomposition.
 /// This function removes the last "logical" character unit from the input string. For complete Korean syllables,
@@ -208,7 +209,7 @@ pub const disassemble_complete_character = disassemble.disassemble_complete_char
 /// // -> ""
 /// ```
 ///
-pub const remove_last_character = disassemble.remove_last_character
+pub const remove_last_character = editor.remove_last_character
 
 /// Checks if a given character can be used as a choseong (initial consonant) in Korean Hangul.
 /// A choseong is the first consonant in a Korean syllable that appears at the beginning.
@@ -232,7 +233,7 @@ pub const remove_last_character = disassemble.remove_last_character
 /// // -> False (complete syllable, not individual jamo)
 /// ```
 ///
-pub const can_be_choseong = validate.can_be_choseong
+pub const can_be_choseong = validator.can_be_choseong
 
 /// Checks if a given character can be used as a jungseong (medial vowel) in Korean Hangul.
 /// A jungseong is the vowel that appears in the middle of a Korean syllable.
@@ -260,7 +261,7 @@ pub const can_be_choseong = validate.can_be_choseong
 /// // -> False (complete syllable, not individual jamo)
 /// ```
 ///
-pub const can_be_jungseong = validate.can_be_jungseong
+pub const can_be_jungseong = validator.can_be_jungseong
 
 /// Checks if a given character can be used as a jongseong (final consonant) in Korean Hangul.
 /// A jongseong is the final consonant that appears at the end of a Korean syllable.
@@ -291,7 +292,7 @@ pub const can_be_jungseong = validate.can_be_jungseong
 /// // -> False (vowels, not consonants)
 /// ```
 ///
-pub const can_be_jongseong = validate.can_be_jongseong
+pub const can_be_jongseong = validator.can_be_jongseong
 
 /// Combines two Korean vowels into a single complex vowel if possible.
 ///
@@ -305,7 +306,7 @@ pub const can_be_jongseong = validate.can_be_jongseong
 /// // -> "ㅣㅏ" (no combination possible)
 /// ```
 ///
-pub const combine_vowels = assemble.combine_vowels
+pub const combine_vowels = composer.combine_vowels
 
 /// Combines Korean jamo components into a complete Hangul syllable.
 ///
@@ -319,7 +320,7 @@ pub const combine_vowels = assemble.combine_vowels
 /// // -> Ok("뀽")
 /// ```
 ///
-pub const combine_character = assemble.combine_character
+pub const combine_character = composer.combine_character
 
 /// Assembles Korean text fragments by intelligently combining characters.
 /// Processes fragments according to Korean linguistic rules including 
@@ -338,4 +339,4 @@ pub const combine_character = assemble.combine_character
 /// // -> "뀨아"
 /// ```
 ///
-pub const assemble = assemble.assemble
+pub const assemble = composer.assemble

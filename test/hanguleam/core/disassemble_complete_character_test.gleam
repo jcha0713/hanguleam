@@ -1,20 +1,20 @@
-import startest.{describe, it}
-import startest/expect
-import hanguleam/core/disassemble.{
+import hanguleam/core/parser.{
   type DisassembleError, EmptyString, IncompleteHangul, NonHangulCharacter,
 }
 import hanguleam/internal/types.{
   type HangulSyllable, Choseong, HangulSyllable, Jongseong, Jungseong,
 }
+import startest.{describe, it}
+import startest/expect
 
 // Helper functions to reduce repetition
 fn assert_disassemble_ok(input: String, expected: HangulSyllable) {
-  disassemble.disassemble_complete_character(input)
+  parser.disassemble_complete_character(input)
   |> expect.to_equal(Ok(expected))
 }
 
 fn assert_disassemble_error(input: String, expected_error: DisassembleError) {
-  disassemble.disassemble_complete_character(input)
+  parser.disassemble_complete_character(input)
   |> expect.to_equal(Error(expected_error))
 }
 

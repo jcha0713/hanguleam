@@ -5,7 +5,7 @@ import gleam/string
 import hanguleam/internal/character
 import hanguleam/internal/types
 
-import hanguleam/core/validate
+import hanguleam/core/validator
 import hanguleam/internal/constants.{
   complete_hangul_start, number_of_jongseong, number_of_jungseong,
 }
@@ -61,9 +61,9 @@ pub fn combine_character(
   let jongseong = constants.assemble_consonant_string(jongseong)
 
   case
-    validate.can_be_choseong(choseong),
-    validate.can_be_jungseong(jungseong),
-    validate.can_be_jongseong(jongseong)
+    validator.can_be_choseong(choseong),
+    validator.can_be_jungseong(jungseong),
+    validator.can_be_jongseong(jongseong)
   {
     True, True, True -> Ok(do_combine(choseong, jungseong, jongseong))
     False, _, _ -> Error(InvalidChoseong(choseong))
@@ -196,13 +196,13 @@ fn extend_syllable_without_batchim(
 ) -> String {
   case jamo {
     types.Consonant(consonant) ->
-      case validate.can_be_jongseong(consonant) {
+      case validator.can_be_jongseong(consonant) {
         True -> combine_character_unsafe(cho, jung, consonant)
         False -> combine_character_unsafe(cho, jung, "") <> consonant
       }
     types.Vowel(vowel) -> {
       let extended_vowel = jung <> vowel
-      case validate.can_be_jungseong(extended_vowel) {
+      case validator.can_be_jungseong(extended_vowel) {
         True -> combine_character_unsafe(cho, extended_vowel, "")
         False -> combine_character_unsafe(cho, jung, "") <> vowel
       }
@@ -218,7 +218,7 @@ fn extend_syllable_with_batchim(
 ) -> String {
   case jamo {
     types.Vowel(vowel) ->
-      case validate.can_be_choseong(jong) {
+      case validator.can_be_choseong(jong) {
         True ->
           combine_character_unsafe(cho, jung, "")
           <> combine_character_unsafe(jong, vowel, "")
@@ -226,7 +226,7 @@ fn extend_syllable_with_batchim(
       }
     types.Consonant(consonant) -> {
       let complex_batchim = jong <> consonant
-      case validate.can_be_jongseong(complex_batchim) {
+      case validator.can_be_jongseong(complex_batchim) {
         True -> combine_character_unsafe(cho, jung, complex_batchim)
         False -> combine_character_unsafe(cho, jung, jong) <> consonant
       }
@@ -244,7 +244,7 @@ fn extend_complex_batchim_syllable(
     types.Vowel(vowel) -> {
       let leading_consonant = string.slice(jong, 0, 1)
       let tailing_consonant = string.slice(jong, 1, 1)
-      case validate.can_be_choseong(tailing_consonant) {
+      case validator.can_be_choseong(tailing_consonant) {
         True ->
           combine_character_unsafe(cho, jung, leading_consonant)
           <> combine_character_unsafe(tailing_consonant, vowel, "")
@@ -259,7 +259,7 @@ fn extend_complex_batchim_syllable(
 fn try_combine_jamos(last: types.Jamo, first: types.Jamo) -> String {
   case last, first {
     types.Consonant(consonant), types.Vowel(vowel) -> {
-      case validate.can_be_choseong(consonant) {
+      case validator.can_be_choseong(consonant) {
         True -> combine_character_unsafe(consonant, vowel, "")
         False -> consonant <> vowel
       }

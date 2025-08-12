@@ -58,7 +58,7 @@ fn get_josa_pair(particle: String) -> Option(JosaPair) {
   }
 }
 
-pub fn josa(word: String, particle: String) -> Result(String, JosaError) {
+pub fn pick(word: String, particle: String) -> Result(String, JosaError) {
   case get_josa_pair(particle) {
     Some(pair) -> Ok(select_josa(word, pair))
     None -> Error(NoMatchingJosa)
@@ -94,62 +94,62 @@ fn has_non_rieul_batchim(word) -> Bool {
 pub fn make_josa_selector(
   particle: String,
 ) -> fn(String) -> Result(String, JosaError) {
-  fn(word: String) { josa(word, particle) }
+  fn(word: String) { pick(word, particle) }
 }
 
 // pre-built functions
 pub fn i_ga(word) -> Result(String, JosaError) {
-  josa(word, "이")
+  pick(word, "이")
 }
 
 pub fn eul_reul(word) -> Result(String, JosaError) {
-  josa(word, "을")
+  pick(word, "을")
 }
 
 pub fn eun_neun(word) -> Result(String, JosaError) {
-  josa(word, "은")
+  pick(word, "은")
 }
 
 pub fn euro_ro(word) -> Result(String, JosaError) {
-  josa(word, "으로")
+  pick(word, "으로")
 }
 
 pub fn gwa_wa(word) -> Result(String, JosaError) {
-  josa(word, "과")
+  pick(word, "과")
 }
 
 pub fn ina_na(word) -> Result(String, JosaError) {
-  josa(word, "이나")
+  pick(word, "이나")
 }
 
 pub fn iran_ran(word) -> Result(String, JosaError) {
-  josa(word, "이란")
+  pick(word, "이란")
 }
 
 pub fn a_ya(word) -> Result(String, JosaError) {
-  josa(word, "아")
+  pick(word, "아")
 }
 
 pub fn irang_rang(word) -> Result(String, JosaError) {
-  josa(word, "이랑")
+  pick(word, "이랑")
 }
 
 pub fn ieyo_yeoyo(word) -> Result(String, JosaError) {
-  josa(word, "이에요")
+  pick(word, "이에요")
 }
 
 pub fn euroseo_roseo(word) -> Result(String, JosaError) {
-  josa(word, "로서")
+  pick(word, "로서")
 }
 
 pub fn eurosseo_rosseo(word) -> Result(String, JosaError) {
-  josa(word, "로써")
+  pick(word, "로써")
 }
 
 pub fn eurobuteo_robuteo(word) -> Result(String, JosaError) {
-  josa(word, "으로부터")
+  pick(word, "으로부터")
 }
 
 pub fn ira_ra(word) -> Result(String, JosaError) {
-  josa(word, "이라")
+  pick(word, "이라")
 }
