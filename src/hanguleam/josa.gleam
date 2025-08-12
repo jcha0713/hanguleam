@@ -58,6 +58,17 @@ fn get_josa_pair(particle: String) -> Option(JosaPair) {
   }
 }
 
+/// Selects the appropriate Korean particle (josa) for a given word based on its final character.
+/// Returns only the selected particle without attaching it to the word.
+///
+/// ## Examples
+///
+/// ```gleam
+/// pick("하니", "이")  // -> Ok("가")
+/// pick("달", "이")    // -> Ok("이")
+/// pick("집", "으로")  // -> Ok("으로")
+/// pick("학교", "으로") // -> Ok("로")
+/// pick("하니", "xxx") // -> Error(NoMatchingJosa)
 pub fn pick(word: String, particle: String) -> Result(String, JosaError) {
   case get_josa_pair(particle) {
     Some(pair) -> Ok(select_josa(word, pair))
@@ -91,64 +102,94 @@ fn has_non_rieul_batchim(word) -> Bool {
   }
 }
 
+/// Creates a reusable josa selector function for a specific particle.
+/// Returns a function that takes a word and selects the appropriate particle form.
+///
+/// ## Examples
+///
+/// ```gleam
+/// let i_ga_selector = make_josa_selector("이")
+/// let eul_reul_selector = make_josa_selector("을")
+///
+/// "하니" |> i_ga_selector   // -> Ok("가")
+/// "달" |> i_ga_selector     // -> Ok("이")
+/// "하니" |> eul_reul_selector // -> Ok("를")
+/// "달" |> eul_reul_selector   // -> Ok("을")
+/// ```
 pub fn make_josa_selector(
   particle: String,
 ) -> fn(String) -> Result(String, JosaError) {
   fn(word: String) { pick(word, particle) }
 }
 
+// Pre-built selector functions
+
+/// Selects "이" or "가" particle.
 pub fn i_ga(word) -> Result(String, JosaError) {
   pick(word, "이")
 }
 
+/// Selects "을" or "를" particle.
 pub fn eul_reul(word) -> Result(String, JosaError) {
   pick(word, "을")
 }
 
+/// Selects "은" or "는" particle.
 pub fn eun_neun(word) -> Result(String, JosaError) {
   pick(word, "은")
 }
 
+/// Selects "으로" or "로" particle.
 pub fn euro_ro(word) -> Result(String, JosaError) {
   pick(word, "으로")
 }
 
+/// Selects "과" or "와" particle.
 pub fn gwa_wa(word) -> Result(String, JosaError) {
   pick(word, "과")
 }
 
+/// Selects "이나" or "나" particle.
 pub fn ina_na(word) -> Result(String, JosaError) {
   pick(word, "이나")
 }
 
+/// Selects "이란" or "란" particle.
 pub fn iran_ran(word) -> Result(String, JosaError) {
   pick(word, "이란")
 }
 
+/// Selects "아" or "야" particle.
 pub fn a_ya(word) -> Result(String, JosaError) {
   pick(word, "아")
 }
 
+/// Selects "이랑" or "랑" particle.
 pub fn irang_rang(word) -> Result(String, JosaError) {
   pick(word, "이랑")
 }
 
+/// Selects "이에요" or "예요" particle.
 pub fn ieyo_yeoyo(word) -> Result(String, JosaError) {
   pick(word, "이에요")
 }
 
+/// Selects "으로서" or "로서" particle.
 pub fn euroseo_roseo(word) -> Result(String, JosaError) {
   pick(word, "로서")
 }
 
+/// Selects "으로써" or "로써" particle.
 pub fn eurosseo_rosseo(word) -> Result(String, JosaError) {
   pick(word, "로써")
 }
 
+/// Selects "으로부터" or "로부터" particle.
 pub fn eurobuteo_robuteo(word) -> Result(String, JosaError) {
   pick(word, "으로부터")
 }
 
+/// Selects "이라" or "라" particle.
 pub fn ira_ra(word) -> Result(String, JosaError) {
   pick(word, "이라")
 }
