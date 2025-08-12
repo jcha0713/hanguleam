@@ -5,12 +5,23 @@ import gleam/string
 import hanguleam/internal/character
 import hanguleam/internal/types
 
-import hanguleam/core/validator
+import hanguleam/validator
 import hanguleam/internal/constants.{
   complete_hangul_start, number_of_jongseong, number_of_jungseong,
 }
 import hanguleam/internal/utils
 
+/// Combines two Korean vowels into a single complex vowel if possible.
+///
+/// ## Examples
+///
+/// ```gleam
+/// combine_vowels("ㅗ", "ㅏ")
+/// // -> "ㅘ"
+///
+/// combine_vowels("ㅣ", "ㅏ")
+/// // -> "ㅣㅏ" (no combination possible)
+/// ```
 pub fn combine_vowels(vowel1: String, vowel2: String) -> String {
   constants.assemble_vowel_string(vowel1 <> vowel2)
 }
@@ -52,6 +63,17 @@ pub fn combine_character_unsafe(
   }
 }
 
+/// Combines Korean jamo components into a complete Hangul syllable.
+///
+/// ## Examples
+///
+/// ```gleam
+/// combine_character(choseong: "ㄱ", jungseong: "ㅏ", jongseong: "")
+/// // -> Ok("가")
+///
+/// combine_character(choseong: "ㄲ", jungseong: "ㅠ", jongseong: "ㅇ")
+/// // -> Ok("뀽")
+/// ```
 pub fn combine_character(
   choseong choseong: String,
   jungseong jungseong: String,
@@ -110,6 +132,22 @@ fn do_combine(choseong: String, jungseong: String, jongseong: String) -> String 
   }
 }
 
+/// Assembles Korean text fragments by intelligently combining characters.
+/// Processes fragments according to Korean linguistic rules including 
+/// consonant-vowel combinations and Korean linking (연음).
+///
+/// ## Examples
+///
+/// ```gleam
+/// assemble(["ㄱ", "ㅏ", "ㅂ"])
+/// // -> "갑"
+///
+/// assemble(["안녕하", "ㅅ", "ㅔ", "요"])
+/// // -> "안녕하세요"
+///
+/// assemble(["뀽", "ㅏ"])
+/// // -> "뀨아"
+/// ```
 pub fn assemble(fragments: List(String)) -> String {
   fragments
   |> list.fold(#("", types.Empty), merge_fragments)

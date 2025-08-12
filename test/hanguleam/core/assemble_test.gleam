@@ -1,4 +1,4 @@
-import hanguleam/core/composer
+import hanguleam/composer
 import startest.{describe, it}
 import startest/expect
 

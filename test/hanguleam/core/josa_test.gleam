@@ -1,4 +1,4 @@
-import hanguleam/core/josa
+import hanguleam/josa
 import startest.{describe, it}
 import startest/expect
 

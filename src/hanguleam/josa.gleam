@@ -1,5 +1,5 @@
 import gleam/option.{type Option, None, Some}
-import hanguleam/core/batchim
+import hanguleam/batchim
 import hanguleam/internal/types
 
 pub type JosaPair {
@@ -97,7 +97,6 @@ pub fn make_josa_selector(
   fn(word: String) { pick(word, particle) }
 }
 
-// pre-built functions
 pub fn i_ga(word) -> Result(String, JosaError) {
   pick(word, "이")
 }

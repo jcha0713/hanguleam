@@ -1,12 +1,32 @@
 import gleam/result
 import gleam/string
-import hanguleam/core/composer
+import hanguleam/composer
 import hanguleam/internal/character
 import hanguleam/internal/types.{
   type HangulCharacter, Choseong, ComplexBatchim, CompoundCV, CompoundCVC,
   CompoundComplexBatchim, Jongseong, Jungseong, SimpleCV, SimpleCVC,
 }
 
+/// Removes the last character component from a Korean string, intelligently handling Korean syllable decomposition.
+/// This function removes the last "logical" character unit from the input string. For complete Korean syllables,
+/// it removes the last jamo component (consonant or vowel part) rather than the entire character, allowing for
+/// fine-grained text editing that matches Korean input method behavior.
+///
+/// ## Examples
+///
+/// ```gleam
+/// remove_last_character("안녕하세요 값")
+/// // -> "안녕하세요 갑"
+///
+/// remove_last_character("전화")
+/// // -> "전호"
+///
+/// remove_last_character("Hello")
+/// // -> "Hell"
+///
+/// remove_last_character("")
+/// // -> ""
+/// ```
 pub fn remove_last_character(text: String) -> String {
   case string.last(text) {
     Error(_) -> text

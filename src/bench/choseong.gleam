@@ -2,7 +2,7 @@ import gleam/list
 import gleam/string
 import glychee/benchmark
 import glychee/configuration
-import hanguleam/core/extractor
+import hanguleam/extractor
 
 pub fn main() {
   configuration.initialize()

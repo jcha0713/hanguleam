@@ -1,4 +1,4 @@
-import hanguleam/core/editor
+import hanguleam/editor
 import startest.{describe, it}
 import startest/expect
 

@@ -1,4 +1,4 @@
-import hanguleam/core/parser
+import hanguleam/parser
 import startest.{describe, it}
 import startest/expect
 

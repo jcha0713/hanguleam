@@ -1,4 +1,4 @@
-import hanguleam/core/parser.{
+import hanguleam/parser.{
   type DisassembleError, EmptyString, IncompleteHangul, NonHangulCharacter,
 }
 import hanguleam/internal/types.{

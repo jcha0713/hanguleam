@@ -1,7 +1,7 @@
 import startest.{describe, it}
 import gleam/option.{Some}
 import startest/expect
-import hanguleam/core/batchim
+import hanguleam/batchim
 import hanguleam/internal/types.{Double, NoBatchim, Single}
 
 pub fn batchim_tests() {

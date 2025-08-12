@@ -1,4 +1,4 @@
-import hanguleam/core/validator
+import hanguleam/validator
 import startest.{describe, it}
 import startest/expect
 
