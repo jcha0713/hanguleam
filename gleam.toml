@@ -1,16 +1,14 @@
 name = "hanguleam"
-version = "0.0.1"
+version = "1.0.0"
 
-# Fill out these fields if you intend to generate HTML documentation or publish
-# your project to the Hex package manager.
-#
-# description = ""
-# licences = ["Apache-2.0"]
-# repository = { type = "github", user = "", repo = "" }
-# links = [{ title = "Website", href = "" }]
-#
-# For a full reference of all the available options, you can have a look at
-# https://gleam.run/writing-gleam/gleam-toml/.
+description = "A Gleam library for Korean text processing, providing comprehensive tools for handling Hangul characters"
+licences = ["Apache-2.0"]
+repository = { type = "github", user = "jcha0713", repo = "https://github.com/jcha0713/hanguleam" }
+
+internal_modules = [
+  "hanguleam/internal/*",
+  "hanguleam/bench/*",
+]
 
 [dependencies]
 gleam_stdlib = ">= 0.44.0 and < 2.0.0"
