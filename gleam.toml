@@ -7,7 +7,6 @@ repository = { type = "github", user = "jcha0713", repo = "https://github.com/jc
 
 internal_modules = [
   "hanguleam/internal/*",
-  "hanguleam/bench/*",
 ]
 
 [dependencies]
