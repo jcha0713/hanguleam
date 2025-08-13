@@ -6,8 +6,9 @@ import hanguleam/internal/character
 import hanguleam/internal/types
 
 import hanguleam/internal/unicode.{
-  assemble_consonant_string, assemble_vowel_string, choseongs, complete_hangul_start,
-  jongseongs, jungseongs, number_of_jongseong, number_of_jungseong,
+  assemble_consonant_string, assemble_vowel_string, choseongs,
+  complete_hangul_start, jongseongs, jungseongs, number_of_jongseong,
+  number_of_jungseong,
 }
 import hanguleam/internal/utils
 import hanguleam/validator
@@ -97,18 +98,9 @@ pub fn combine_character(
 
 fn do_combine(choseong: String, jungseong: String, jongseong: String) -> String {
   let result = {
-    use choseong_idx <- result.try(utils.find_index(
-      choseongs,
-      choseong,
-    ))
-    use jungseong_idx <- result.try(utils.find_index(
-      jungseongs,
-      jungseong,
-    ))
-    use jongseong_idx <- result.try(utils.find_index(
-      jongseongs,
-      jongseong,
-    ))
+    use choseong_idx <- result.try(utils.find_index(choseongs, choseong))
+    use jungseong_idx <- result.try(utils.find_index(jungseongs, jungseong))
+    use jongseong_idx <- result.try(utils.find_index(jongseongs, jongseong))
 
     Ok(#(choseong_idx, jungseong_idx, jongseong_idx))
   }

@@ -2,11 +2,12 @@ import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/result
 import gleam/string
-import hanguleam/internal/unicode.{
-  complete_hangul_start, disassemble_consonant_string, jongseongs, number_of_jongseong,
-}
 import hanguleam/internal/types.{
   type BatchimInfo, type BatchimType, Double, NoBatchim, Single,
+}
+import hanguleam/internal/unicode.{
+  complete_hangul_start, disassemble_consonant_string, jongseongs,
+  number_of_jongseong,
 }
 import hanguleam/internal/utils
 
