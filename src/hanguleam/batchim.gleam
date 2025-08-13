@@ -2,8 +2,8 @@ import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/result
 import gleam/string
-import hanguleam/internal/constants.{
-  complete_hangul_start, jongseongs, number_of_jongseong,
+import hanguleam/internal/unicode.{
+  complete_hangul_start, disassemble_consonant_string, jongseongs, number_of_jongseong,
 }
 import hanguleam/internal/types.{
   type BatchimInfo, type BatchimType, Double, NoBatchim, Single,
@@ -74,7 +74,7 @@ pub fn get_batchim(text: String) -> Result(BatchimInfo, BatchimError) {
         |> result.map_error(fn(_) { InvalidCharacter(char) }),
       )
       let components =
-        batchim |> constants.disassemble_consonant_string |> string.to_graphemes
+        batchim |> disassemble_consonant_string |> string.to_graphemes
       let batchim_type = get_batchim_type(components)
 
       Ok(types.BatchimInfo(

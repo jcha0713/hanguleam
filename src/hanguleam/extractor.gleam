@@ -1,7 +1,7 @@
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/string
-import hanguleam/internal/constants.{
+import hanguleam/internal/unicode.{
   choseongs, complete_hangul_start, number_of_jongseong, number_of_jungseong,
 }
 import hanguleam/internal/utils

@@ -1,6 +1,6 @@
 import gleam/list
 import gleam/string
-import hanguleam/internal/constants.{
+import hanguleam/internal/unicode.{
   complete_hangul_end, complete_hangul_start, hangul_jamo_end, hangul_jamo_start,
   jungseong_end, jungseong_start, modern_jamo_end, modern_jamo_start,
 }

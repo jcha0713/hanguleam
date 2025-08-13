@@ -1,7 +1,7 @@
 import gleam/list
 import gleam/string
 
-import hanguleam/internal/constants.{
+import hanguleam/internal/unicode.{
   assemble_consonant_string, assemble_vowel_string, choseongs, jongseongs,
   jungseongs,
 }

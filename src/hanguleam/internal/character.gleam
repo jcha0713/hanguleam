@@ -1,8 +1,9 @@
 import gleam/result
 import gleam/string
 
-import hanguleam/internal/constants.{
-  choseongs, complete_hangul_start, jongseongs, jungseongs, normalize_modern_jamo,
+import hanguleam/internal/unicode.{
+  choseongs, complete_hangul_start, disassemble_consonant_string,
+  disassemble_vowel_string, jongseongs, jungseongs, normalize_modern_jamo,
   number_of_jongseong, number_of_jungseong,
 }
 import hanguleam/internal/types.{
@@ -67,8 +68,8 @@ pub fn decode_hangul_codepoint(
     jongseongs,
   ))
 
-  let jungseong = constants.disassemble_vowel_string(jungseong)
-  let jongseong = constants.disassemble_consonant_string(jongseong)
+  let jungseong = disassemble_vowel_string(jungseong)
+  let jongseong = disassemble_consonant_string(jongseong)
 
   Ok(HangulSyllable(
     Choseong(choseong),
@@ -83,8 +84,8 @@ pub fn parse_hangul_jamo(char: String) -> Result(Jamo, Nil) {
   use codepoint <- result.try(utils.get_codepoint_result_from_char(normalized_char))
 
   case utils.is_jungseong_range(codepoint) {
-    True -> Ok(Vowel(constants.disassemble_vowel_string(normalized_char)))
-    False -> Ok(Consonant(constants.disassemble_consonant_string(normalized_char)))
+    True -> Ok(Vowel(disassemble_vowel_string(normalized_char)))
+    False -> Ok(Consonant(disassemble_consonant_string(normalized_char)))
   }
 }
 

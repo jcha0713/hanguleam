@@ -5,8 +5,9 @@ import gleam/string
 import hanguleam/internal/character
 import hanguleam/internal/types
 
-import hanguleam/internal/constants.{
-  complete_hangul_start, number_of_jongseong, number_of_jungseong,
+import hanguleam/internal/unicode.{
+  assemble_consonant_string, assemble_vowel_string, choseongs, complete_hangul_start,
+  jongseongs, jungseongs, number_of_jongseong, number_of_jungseong,
 }
 import hanguleam/internal/utils
 import hanguleam/validator
@@ -23,7 +24,7 @@ import hanguleam/validator
 /// // -> "ㅣㅏ" (no combination possible)
 /// ```
 pub fn combine_vowels(vowel1: String, vowel2: String) -> String {
-  constants.assemble_vowel_string(vowel1 <> vowel2)
+  assemble_vowel_string(vowel1 <> vowel2)
 }
 
 pub type AssembleError {
@@ -79,8 +80,8 @@ pub fn combine_character(
   jungseong jungseong: String,
   jongseong jongseong: String,
 ) -> Result(String, AssembleError) {
-  let jungseong = constants.assemble_vowel_string(jungseong)
-  let jongseong = constants.assemble_consonant_string(jongseong)
+  let jungseong = assemble_vowel_string(jungseong)
+  let jongseong = assemble_consonant_string(jongseong)
 
   case
     validator.can_be_choseong(choseong),
@@ -97,15 +98,15 @@ pub fn combine_character(
 fn do_combine(choseong: String, jungseong: String, jongseong: String) -> String {
   let result = {
     use choseong_idx <- result.try(utils.find_index(
-      constants.choseongs,
+      choseongs,
       choseong,
     ))
     use jungseong_idx <- result.try(utils.find_index(
-      constants.jungseongs,
+      jungseongs,
       jungseong,
     ))
     use jongseong_idx <- result.try(utils.find_index(
-      constants.jongseongs,
+      jongseongs,
       jongseong,
     ))
 
