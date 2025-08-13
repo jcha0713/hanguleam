@@ -3,7 +3,7 @@ import gleam/pair
 import gleam/result
 import gleam/string
 import hanguleam/internal/character
-import hanguleam/internal/types
+import hanguleam/types
 
 import hanguleam/internal/unicode.{
   assemble_consonant_string, assemble_vowel_string, choseongs,

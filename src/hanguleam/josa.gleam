@@ -1,6 +1,6 @@
 import gleam/option.{type Option, None, Some}
 import hanguleam/batchim
-import hanguleam/internal/types
+import hanguleam/types
 
 pub type JosaPair {
   JosaPair(with_batchim: String, without_batchim: String)

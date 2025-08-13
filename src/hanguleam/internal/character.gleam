@@ -1,18 +1,18 @@
 import gleam/result
 import gleam/string
 
-import hanguleam/internal/types.{
-  type CharacterType, type HangulCharacter, type HangulSyllable, type Jamo,
-  Choseong, CompleteHangul, ComplexBatchim, CompoundCV, CompoundCVC,
-  CompoundComplexBatchim, Consonant, Empty, HangulSyllable, IncompleteHangul,
-  Jongseong, Jungseong, NonHangul, SimpleCV, SimpleCVC, Vowel,
-}
 import hanguleam/internal/unicode.{
   choseongs, complete_hangul_start, disassemble_consonant_string,
   disassemble_vowel_string, jongseongs, jungseongs, normalize_modern_jamo,
   number_of_jongseong, number_of_jungseong,
 }
 import hanguleam/internal/utils
+import hanguleam/types.{
+  type CharacterType, type HangulCharacter, type HangulSyllable, type Jamo,
+  Choseong, CompleteHangul, ComplexBatchim, CompoundCV, CompoundCVC,
+  CompoundComplexBatchim, Consonant, Empty, HangulSyllable, IncompleteHangul,
+  Jongseong, Jungseong, NonHangul, SimpleCV, SimpleCVC, Vowel,
+}
 
 pub fn get_character_type(char: String) -> CharacterType {
   case char {

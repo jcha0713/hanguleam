@@ -2,7 +2,7 @@ import gleam/result
 import gleam/string
 import hanguleam/composer
 import hanguleam/internal/character
-import hanguleam/internal/types.{
+import hanguleam/types.{
   type HangulCharacter, Choseong, ComplexBatchim, CompoundCV, CompoundCVC,
   CompoundComplexBatchim, Jongseong, Jungseong, SimpleCV, SimpleCVC,
 }

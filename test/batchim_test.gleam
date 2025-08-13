@@ -1,6 +1,6 @@
 import gleam/option.{Some}
 import hanguleam/batchim
-import hanguleam/internal/types.{Double, NoBatchim, Single}
+import hanguleam/types.{Double, NoBatchim, Single}
 import startest.{describe, it}
 import startest/expect
 

@@ -1,7 +1,7 @@
 import gleam/list
 import gleam/string
 import hanguleam/internal/character
-import hanguleam/internal/types.{
+import hanguleam/types.{
   type HangulSyllable, Choseong, Consonant, HangulSyllable, Jongseong, Jungseong,
   Vowel,
 }
