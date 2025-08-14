@@ -3,8 +3,9 @@ import gleam/string
 
 import hanguleam/internal/unicode.{
   choseongs, complete_hangul_start, disassemble_consonant_string,
-  disassemble_vowel_string, get_codepoint_result_from_char, jongseongs,
-  jungseongs, normalize_modern_jamo, number_of_jongseong, number_of_jungseong,
+  disassemble_vowel_string, get_codepoint_result_from_char, is_complete_hangul,
+  is_hangul_alphabet, is_jungseong_range, jongseongs, jungseongs,
+  normalize_modern_jamo, number_of_jongseong, number_of_jungseong,
 }
 import hanguleam/internal/utils
 import hanguleam/types.{
@@ -20,7 +21,7 @@ pub fn get_character_type(char: String) -> CharacterType {
     _ -> {
       case get_codepoint_result_from_char(char) {
         Ok(codepoint) ->
-          case utils.is_complete_hangul(codepoint) {
+          case is_complete_hangul(codepoint) {
             True -> {
               case decode_hangul_codepoint(codepoint) {
                 Ok(syllable) -> {
@@ -30,7 +31,7 @@ pub fn get_character_type(char: String) -> CharacterType {
               }
             }
             False -> {
-              case utils.is_hangul_alphabet(codepoint) {
+              case is_hangul_alphabet(codepoint) {
                 True ->
                   case parse_hangul_jamo(char) {
                     Ok(parsed) -> IncompleteHangul(char: parsed)
@@ -83,7 +84,7 @@ pub fn parse_hangul_jamo(char: String) -> Result(Jamo, Nil) {
   let normalized_char = normalize_modern_jamo(char)
   use codepoint <- result.try(get_codepoint_result_from_char(normalized_char))
 
-  case utils.is_jungseong_range(codepoint) {
+  case is_jungseong_range(codepoint) {
     True -> Ok(Vowel(disassemble_vowel_string(normalized_char)))
     False -> Ok(Consonant(disassemble_consonant_string(normalized_char)))
   }

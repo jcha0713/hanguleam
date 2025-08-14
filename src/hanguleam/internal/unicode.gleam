@@ -199,6 +199,36 @@ pub fn get_codepoint_result_from_char(char: String) -> Result(Int, Nil) {
   }
 }
 
+/// Check if a codepoint represents a complete Hangul syllable (U+AC00-U+D7A3)
+pub fn is_complete_hangul(codepoint: Int) -> Bool {
+  complete_hangul_start <= codepoint && codepoint <= complete_hangul_end
+}
+
+/// Check if a codepoint represents modern Hangul jamo (U+1100-U+11FF) - combining forms
+pub fn is_modern_jamo(codepoint: Int) -> Bool {
+  modern_jamo_start <= codepoint && codepoint <= modern_jamo_end
+}
+
+/// Check if a codepoint represents compatibility Hangul jamo (U+3131-U+3163) - standalone forms
+pub fn is_compatibility_jamo(codepoint: Int) -> Bool {
+  hangul_jamo_start <= codepoint && codepoint <= hangul_jamo_end
+}
+
+/// Check if a codepoint represents any Hangul jamo (both modern and compatibility forms)
+pub fn is_hangul_alphabet(codepoint: Int) -> Bool {
+  is_modern_jamo(codepoint) || is_compatibility_jamo(codepoint)
+}
+
+/// Check if a codepoint represents vowels within compatibility jamo range (U+314F-U+3163)
+pub fn is_jungseong_range(codepoint: Int) -> Bool {
+  codepoint >= jungseong_start && codepoint <= jungseong_end
+}
+
+/// Check if a codepoint represents any Hangul character (complete syllables + any jamo)
+pub fn is_hangul(codepoint: Int) -> Bool {
+  is_complete_hangul(codepoint) || is_hangul_alphabet(codepoint)
+}
+
 /// Check if a single character is a modern choseong (U+1100-U+1112)
 pub fn is_modern_choseong(char: String) -> Bool {
   case get_codepoint_result_from_char(char) {

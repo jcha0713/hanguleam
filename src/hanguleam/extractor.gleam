@@ -3,7 +3,7 @@ import gleam/option.{type Option, None, Some}
 import gleam/string
 import hanguleam/internal/unicode.{
   choseongs, complete_hangul_start, get_codepoint_result_from_char,
-  number_of_jongseong, number_of_jungseong,
+  is_complete_hangul, number_of_jongseong, number_of_jungseong,
 }
 import hanguleam/internal/utils
 
@@ -56,7 +56,7 @@ fn extract_choseong_from_char(char: String) -> Option(String) {
 fn extract_from_complete_hangul(char: String) {
   case get_codepoint_result_from_char(char) {
     Ok(codepoint) -> {
-      case utils.is_complete_hangul(codepoint) {
+      case is_complete_hangul(codepoint) {
         True -> get_choseong_index(codepoint) |> get_choseong_by_index
         False -> None
       }

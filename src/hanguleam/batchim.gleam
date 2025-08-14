@@ -4,7 +4,8 @@ import gleam/result
 import gleam/string
 import hanguleam/internal/unicode.{
   complete_hangul_start, disassemble_consonant_string,
-  get_codepoint_result_from_char, jongseongs, number_of_jongseong,
+  get_codepoint_result_from_char, is_complete_hangul, jongseongs,
+  number_of_jongseong,
 }
 import hanguleam/internal/utils
 import hanguleam/types.{
@@ -66,7 +67,7 @@ pub fn get_batchim(text: String) -> Result(BatchimInfo, BatchimError) {
     |> result.map_error(fn(_) { InvalidCharacter(char) }),
   )
 
-  case utils.is_complete_hangul(codepoint) {
+  case is_complete_hangul(codepoint) {
     False -> Error(InvalidCharacter(char))
     True -> {
       let batchim_index = get_batchim_index(codepoint)
