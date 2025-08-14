@@ -2,8 +2,9 @@ import gleam/list
 import gleam/string
 
 import hanguleam/internal/unicode.{
-  assemble_consonant_string, assemble_vowel_string, choseongs, jongseongs,
-  jungseongs,
+  assemble_consonant_string, assemble_vowel_string, is_compatibility_choseong,
+  is_compatibility_jongseong, is_compatibility_jungseong, is_modern_choseong,
+  is_modern_jongseong, is_modern_jungseong, jongseongs, jungseongs,
 }
 
 /// Checks if a given character can be used as a choseong (initial consonant) in Korean Hangul.
@@ -28,7 +29,7 @@ import hanguleam/internal/unicode.{
 /// // -> False (complete syllable, not individual jamo)
 /// ```
 pub fn can_be_choseong(char: String) -> Bool {
-  choseongs |> list.contains(char)
+  is_modern_choseong(char) || is_compatibility_choseong(char)
 }
 
 /// Checks if a given character can be used as a jungseong (medial vowel) in Korean Hangul.
@@ -58,7 +59,7 @@ pub fn can_be_choseong(char: String) -> Bool {
 /// ```
 pub fn can_be_jungseong(char: String) -> Bool {
   case string.length(char) {
-    1 -> list.contains(jungseongs, char)
+    1 -> is_modern_jungseong(char) || is_compatibility_jungseong(char)
     2 -> assemble_vowel_string(char) |> list.contains(jungseongs, _)
     _ -> False
   }
@@ -95,7 +96,7 @@ pub fn can_be_jungseong(char: String) -> Bool {
 pub fn can_be_jongseong(char: String) -> Bool {
   case string.length(char) {
     0 -> True
-    1 -> list.contains(jongseongs, char)
+    1 -> is_modern_jongseong(char) || is_compatibility_jongseong(char)
     2 -> assemble_consonant_string(char) |> list.contains(jongseongs, _)
     _ -> False
   }

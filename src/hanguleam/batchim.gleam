@@ -3,8 +3,8 @@ import gleam/option.{type Option, None, Some}
 import gleam/result
 import gleam/string
 import hanguleam/internal/unicode.{
-  complete_hangul_start, disassemble_consonant_string, jongseongs,
-  number_of_jongseong,
+  complete_hangul_start, disassemble_consonant_string,
+  get_codepoint_result_from_char, jongseongs, number_of_jongseong,
 }
 import hanguleam/internal/utils
 import hanguleam/types.{
@@ -62,7 +62,7 @@ pub fn get_batchim(text: String) -> Result(BatchimInfo, BatchimError) {
   )
 
   use codepoint <- result.try(
-    utils.get_codepoint_result_from_char(char)
+    get_codepoint_result_from_char(char)
     |> result.map_error(fn(_) { InvalidCharacter(char) }),
   )
 

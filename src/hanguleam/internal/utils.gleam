@@ -1,5 +1,4 @@
 import gleam/list
-import gleam/string
 import hanguleam/internal/unicode.{
   complete_hangul_end, complete_hangul_start, hangul_jamo_end, hangul_jamo_start,
   jungseong_end, jungseong_start, modern_jamo_end, modern_jamo_start,
@@ -32,13 +31,6 @@ pub fn is_jungseong_range(codepoint: Int) -> Bool {
 /// Detects any Hangul character (complete syllables + any jamo)
 pub fn is_hangul(codepoint: Int) -> Bool {
   is_complete_hangul(codepoint) || is_hangul_alphabet(codepoint)
-}
-
-pub fn get_codepoint_result_from_char(char: String) -> Result(Int, Nil) {
-  case string.to_utf_codepoints(char) |> list.first {
-    Ok(codepoint) -> Ok(string.utf_codepoint_to_int(codepoint))
-    Error(_) -> Error(Nil)
-  }
 }
 
 pub fn get_value_by_index(

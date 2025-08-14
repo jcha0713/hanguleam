@@ -1,3 +1,6 @@
+import gleam/list
+import gleam/string
+
 // 가
 pub const complete_hangul_start = 0xAC00
 
@@ -9,8 +12,6 @@ pub const modern_jamo_start = 0x1100
 
 // ᄀ
 pub const modern_jamo_end = 0x11FF
-
-// ᇿ
 
 // Modern jamo sub-ranges
 pub const modern_choseong_start = 0x1100
@@ -30,12 +31,9 @@ pub const modern_jongseong_start = 0x11A8
 // ᆨ (trailing consonants) 
 pub const modern_jongseong_end = 0x11C2
 
-// ᇂ
-
 // Hangul Compatibility Jamo (U+3131-U+3163) - standalone display forms
-pub const hangul_jamo_start = 0x3131
-
 // ㄱ
+pub const hangul_jamo_start = 0x3131
 
 // ㅣ (Hangul compatibility jamo end)
 pub const hangul_jamo_end = 0x3163
@@ -190,6 +188,71 @@ pub fn assemble_consonant_string(consonant: String) -> String {
     "ㅍ" -> "ㅍ"
     "ㅎ" -> "ㅎ"
     _ -> consonant
+  }
+}
+
+/// Extract codepoint from a single character string
+pub fn get_codepoint_result_from_char(char: String) -> Result(Int, Nil) {
+  case string.to_utf_codepoints(char) |> list.first {
+    Ok(codepoint) -> Ok(string.utf_codepoint_to_int(codepoint))
+    Error(_) -> Error(Nil)
+  }
+}
+
+/// Check if a single character is a modern choseong (U+1100-U+1112)
+pub fn is_modern_choseong(char: String) -> Bool {
+  case get_codepoint_result_from_char(char) {
+    Ok(codepoint) ->
+      codepoint >= modern_choseong_start && codepoint <= modern_choseong_end
+    Error(_) -> False
+  }
+}
+
+/// Check if a single character is a compatibility choseong
+pub fn is_compatibility_choseong(char: String) -> Bool {
+  case get_codepoint_result_from_char(char) {
+    Ok(codepoint) ->
+      codepoint >= 0x3131
+      && codepoint <= 0x314E
+      && list.contains(choseongs, char)
+    Error(_) -> False
+  }
+}
+
+/// Check if a single character is a modern jungseong (U+1161-U+1175)
+pub fn is_modern_jungseong(char: String) -> Bool {
+  case get_codepoint_result_from_char(char) {
+    Ok(codepoint) ->
+      codepoint >= modern_jungseong_start && codepoint <= modern_jungseong_end
+    Error(_) -> False
+  }
+}
+
+/// Check if a single character is a compatibility jungseong
+pub fn is_compatibility_jungseong(char: String) -> Bool {
+  case get_codepoint_result_from_char(char) {
+    Ok(codepoint) -> codepoint >= jungseong_start && codepoint <= jungseong_end
+    Error(_) -> False
+  }
+}
+
+/// Check if a single character is a modern jongseong (U+11A8-U+11C2)
+pub fn is_modern_jongseong(char: String) -> Bool {
+  case get_codepoint_result_from_char(char) {
+    Ok(codepoint) ->
+      codepoint >= modern_jongseong_start && codepoint <= modern_jongseong_end
+    Error(_) -> False
+  }
+}
+
+/// Check if a single character is a compatibility jongseong
+pub fn is_compatibility_jongseong(char: String) -> Bool {
+  case get_codepoint_result_from_char(char) {
+    Ok(codepoint) ->
+      codepoint >= 0x3131
+      && codepoint <= 0x314E
+      && list.contains(jongseongs, char)
+    Error(_) -> False
   }
 }
 

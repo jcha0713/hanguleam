@@ -3,8 +3,8 @@ import gleam/string
 
 import hanguleam/internal/unicode.{
   choseongs, complete_hangul_start, disassemble_consonant_string,
-  disassemble_vowel_string, jongseongs, jungseongs, normalize_modern_jamo,
-  number_of_jongseong, number_of_jungseong,
+  disassemble_vowel_string, get_codepoint_result_from_char, jongseongs,
+  jungseongs, normalize_modern_jamo, number_of_jongseong, number_of_jungseong,
 }
 import hanguleam/internal/utils
 import hanguleam/types.{
@@ -18,7 +18,7 @@ pub fn get_character_type(char: String) -> CharacterType {
   case char {
     "" -> Empty
     _ -> {
-      case utils.get_codepoint_result_from_char(char) {
+      case get_codepoint_result_from_char(char) {
         Ok(codepoint) ->
           case utils.is_complete_hangul(codepoint) {
             True -> {
@@ -81,9 +81,7 @@ pub fn decode_hangul_codepoint(
 pub fn parse_hangul_jamo(char: String) -> Result(Jamo, Nil) {
   // Normalize modern jamo to compatibility jamo for consistent processing
   let normalized_char = normalize_modern_jamo(char)
-  use codepoint <- result.try(utils.get_codepoint_result_from_char(
-    normalized_char,
-  ))
+  use codepoint <- result.try(get_codepoint_result_from_char(normalized_char))
 
   case utils.is_jungseong_range(codepoint) {
     True -> Ok(Vowel(disassemble_vowel_string(normalized_char)))
