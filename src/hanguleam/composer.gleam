@@ -34,12 +34,14 @@ pub type AssembleError {
   InvalidJongseong(String)
 }
 
+/// ⚠️ **UNSAFE**: Combines jamo into Hangul syllable without validation. **WILL PANIC** on invalid inputs.
+/// Use `combine_character()` for safe operation or ensure inputs are pre-validated.
 pub fn combine_character_unsafe(
-  cho: String,
-  jung: String,
-  jong: String,
+  choseong: String,
+  jungseong: String,
+  jongseong: String,
 ) -> String {
-  case combine_character(cho, jung, jong) {
+  case combine_character(choseong, jungseong, jongseong) {
     Ok(combined) -> combined
     Error(InvalidChoseong(invalid)) -> {
       let msg =
