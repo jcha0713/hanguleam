@@ -3,7 +3,7 @@ version = "1.0.0"
 
 description = "A Gleam library for Korean text processing, providing comprehensive tools for handling Hangul characters"
 licences = ["Apache-2.0"]
-repository = { type = "github", user = "jcha0713", repo = "https://github.com/jcha0713/hanguleam" }
+repository = { type = "github", user = "jcha0713", repo = "hanguleam" }
 
 internal_modules = [
   "hanguleam/internal/*",
