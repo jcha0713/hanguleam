@@ -33,8 +33,7 @@ pub fn main() {
 ### Check for batchim (final consonants)
 
 ```gleam
-import hanguleam/batchim.{HasBatchimOptions, SingleOnly, DoubleOnly}
-import gleam/option.{None, Some}
+import hanguleam/batchim.{AnyBatchim, HasBatchimOptions, SingleOnly, DoubleOnly}
 
 pub fn main() {
   // Simple check for any batchim
@@ -42,8 +41,8 @@ pub fn main() {
   batchim.has_batchim("토") // False
 
   // Advanced filtering by batchim type
-  batchim.has_batchim_with_options("갑", Some(HasBatchimOptions(only: Some(SingleOnly)))) // True
-  batchim.has_batchim_with_options("값", Some(HasBatchimOptions(only: Some(DoubleOnly)))) // True
+  batchim.has_batchim_with_options("갑", HasBatchimOptions(only: SingleOnly)) // True
+  batchim.has_batchim_with_options("값", HasBatchimOptions(only: DoubleOnly)) // True
 }
 ```
 

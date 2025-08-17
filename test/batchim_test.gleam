@@ -1,4 +1,3 @@
-import gleam/option.{Some}
 import hanguleam/batchim
 import hanguleam/types.{Double, NoBatchim, Single}
 import startest.{describe, it}
@@ -42,42 +41,32 @@ pub fn batchim_tests() {
         it("should detect single batchim correctly", fn() {
           batchim.has_batchim_with_options(
             "강",
-            options: Some(
-              batchim.HasBatchimOptions(only: Some(batchim.SingleOnly)),
-            ),
+            options: batchim.HasBatchimOptions(only: batchim.SingleOnly),
           )
           |> expect.to_equal(True)
 
           batchim.has_batchim_with_options(
             "한",
-            options: Some(
-              batchim.HasBatchimOptions(only: Some(batchim.SingleOnly)),
-            ),
+            options: batchim.HasBatchimOptions(only: batchim.SingleOnly),
           )
           |> expect.to_equal(True)
 
           batchim.has_batchim_with_options(
             "밥",
-            options: Some(
-              batchim.HasBatchimOptions(only: Some(batchim.SingleOnly)),
-            ),
+            options: batchim.HasBatchimOptions(only: batchim.SingleOnly),
           )
           |> expect.to_equal(True)
         }),
         it("should reject double batchim when filtering for single", fn() {
           batchim.has_batchim_with_options(
             "닭",
-            options: Some(
-              batchim.HasBatchimOptions(only: Some(batchim.SingleOnly)),
-            ),
+            options: batchim.HasBatchimOptions(only: batchim.SingleOnly),
           )
           |> expect.to_equal(False)
 
           batchim.has_batchim_with_options(
             "앉",
-            options: Some(
-              batchim.HasBatchimOptions(only: Some(batchim.SingleOnly)),
-            ),
+            options: batchim.HasBatchimOptions(only: batchim.SingleOnly),
           )
           |> expect.to_equal(False)
         }),
@@ -86,42 +75,32 @@ pub fn batchim_tests() {
         it("should detect double batchim correctly", fn() {
           batchim.has_batchim_with_options(
             "닭",
-            options: Some(
-              batchim.HasBatchimOptions(only: Some(batchim.DoubleOnly)),
-            ),
+            options: batchim.HasBatchimOptions(only: batchim.DoubleOnly),
           )
           |> expect.to_equal(True)
 
           batchim.has_batchim_with_options(
             "앉",
-            options: Some(
-              batchim.HasBatchimOptions(only: Some(batchim.DoubleOnly)),
-            ),
+            options: batchim.HasBatchimOptions(only: batchim.DoubleOnly),
           )
           |> expect.to_equal(True)
 
           batchim.has_batchim_with_options(
             "값",
-            options: Some(
-              batchim.HasBatchimOptions(only: Some(batchim.DoubleOnly)),
-            ),
+            options: batchim.HasBatchimOptions(only: batchim.DoubleOnly),
           )
           |> expect.to_equal(True)
         }),
         it("should reject single batchim when filtering for double", fn() {
           batchim.has_batchim_with_options(
             "강",
-            options: Some(
-              batchim.HasBatchimOptions(only: Some(batchim.DoubleOnly)),
-            ),
+            options: batchim.HasBatchimOptions(only: batchim.DoubleOnly),
           )
           |> expect.to_equal(False)
 
           batchim.has_batchim_with_options(
             "한",
-            options: Some(
-              batchim.HasBatchimOptions(only: Some(batchim.DoubleOnly)),
-            ),
+            options: batchim.HasBatchimOptions(only: batchim.DoubleOnly),
           )
           |> expect.to_equal(False)
         }),
@@ -130,17 +109,13 @@ pub fn batchim_tests() {
         it("should fail both filters for characters without batchim", fn() {
           batchim.has_batchim_with_options(
             "가",
-            options: Some(
-              batchim.HasBatchimOptions(only: Some(batchim.SingleOnly)),
-            ),
+            options: batchim.HasBatchimOptions(only: batchim.SingleOnly),
           )
           |> expect.to_equal(False)
 
           batchim.has_batchim_with_options(
             "가",
-            options: Some(
-              batchim.HasBatchimOptions(only: Some(batchim.DoubleOnly)),
-            ),
+            options: batchim.HasBatchimOptions(only: batchim.DoubleOnly),
           )
           |> expect.to_equal(False)
         }),

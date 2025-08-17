@@ -23,7 +23,8 @@ pub type BatchimError {
 }
 
 pub type HasBatchimOptions {
-  HasBatchimOptions(only: Option(BatchimOnlyFilter))
+  HasBatchimOptions(only: BatchimOnlyFilter)
+  AnyBatchim
 }
 
 /// Extracts detailed batchim information from the last character of a Korean string.
@@ -105,7 +106,7 @@ pub fn get_batchim(text: String) -> Result(BatchimInfo, BatchimError) {
 /// // -> False
 /// ```
 pub fn has_batchim(text: String) -> Bool {
-  has_batchim_with_options(text, None)
+  has_batchim_with_options(text, AnyBatchim)
 }
 
 /// Checks if the last character of a Korean string has a batchim (final consonant) with filtering options.
@@ -113,35 +114,34 @@ pub fn has_batchim(text: String) -> Bool {
 /// 
 /// ## Options
 /// 
-/// - `None`: Checks for any batchim (single or double)
-/// - `Some(HasBatchimOptions(only: Some(SingleOnly)))`: Only single batchim
-/// - `Some(HasBatchimOptions(only: Some(DoubleOnly)))`: Only double batchim
+/// - `AnyBatchim`: Checks for any batchim (single or double)
+/// - `HasBatchimOptions(only: SingleOnly)`: Only single batchim
+/// - `HasBatchimOptions(only: DoubleOnly)`: Only double batchim
 ///
 /// ## Examples
 ///
 /// ```gleam
-/// import hanguleam/batchim.{HasBatchimOptions, SingleOnly, DoubleOnly}
-/// import gleam/option.{None, Some}
+/// import hanguleam/batchim.{AnyBatchim, HasBatchimOptions, SingleOnly, DoubleOnly}
 /// 
-/// has_batchim_with_options("값", None)
+/// has_batchim_with_options("값", AnyBatchim)
 /// // -> True
 /// 
-/// has_batchim_with_options("갑", Some(HasBatchimOptions(only: Some(SingleOnly))))
+/// has_batchim_with_options("갑", HasBatchimOptions(only: SingleOnly))
 /// // -> True
 /// 
-/// has_batchim_with_options("값", Some(HasBatchimOptions(only: Some(SingleOnly))))
+/// has_batchim_with_options("값", HasBatchimOptions(only: SingleOnly))
 /// // -> False (값 has double batchim ㅂ+ㅅ)
 /// 
-/// has_batchim_with_options("값", Some(HasBatchimOptions(only: Some(DoubleOnly))))
+/// has_batchim_with_options("값", HasBatchimOptions(only: DoubleOnly))
 /// // -> True
 /// ```
 pub fn has_batchim_with_options(
   text: String,
-  options options: Option(HasBatchimOptions),
+  options options: HasBatchimOptions,
 ) -> Bool {
   let filter = case options {
-    None -> None
-    Some(HasBatchimOptions(only: filter)) -> filter
+    AnyBatchim -> None
+    HasBatchimOptions(only: filter) -> Some(filter)
   }
 
   case get_batchim(text) {
